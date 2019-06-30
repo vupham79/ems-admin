@@ -1,0 +1,14 @@
+.modalDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.page-header {
+  justify-content: space-between
+}
+
+.btnGroup {
+  display: flex;
+  justify-content: flex-end;
+}
