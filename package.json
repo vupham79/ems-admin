@@ -14,11 +14,12 @@
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-toggle-component": "2.0.9",
+    "react-toggle-component": "^2.0.9",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
-    "shards-react": "^1.0.3"
+    "shards-react": "^1.0.3",
+    "typescript": "^3.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
