@@ -11,7 +11,7 @@ class PreCompanyView extends React.Component {
     if (isAuth) {
       return <CompanyView />
     }
-    return <Redirect path='/' />
+    return <Redirect to='/' />
   }
 }
 

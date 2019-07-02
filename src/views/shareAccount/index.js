@@ -11,7 +11,7 @@ class PreShareAccountView extends React.Component {
     if (isAuth) {
       return <ShareAccountView />
     }
-    return <Redirect path='/' />
+    return <Redirect to='/' />
   }
 }
 

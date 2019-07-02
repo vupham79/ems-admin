@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import routes from "./routes";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { routes, NotFoundPage } from "./routes";
 
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -10,30 +10,40 @@ import Toast from './components/Toast';
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 
-export default () => (
-  <ReduxProvider store={store}>
-    <PersistGate persistor={persistor}>
-      {/* <Toast /> */}
-      <Router basename={process.env.REACT_APP_BASENAME || ""}>
-        <div>
-          {routes.map((route, index) => {
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                exact={route.exact}
-                component={() =>
-                  route.layout ?
-                    <route.layout>
+class App extends React.Component {
+  render() {
+    return (
+      <ReduxProvider store={store}>
+        <PersistGate persistor={persistor}>
+          {/* <Toast /> */}
+          <Router>
+            <Switch>
+              {routes.map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  exact={route.exact}
+                  component={() => {
+                    if (route.layout) {
+                      return (
+                        <route.layout>
+                          <route.component />
+                        </route.layout>)
+                    }
+                    return (
                       <route.component />
-                    </route.layout>
-                    : <route.component />
-                }
-              />
-            );
-          })}
-        </div>
-      </Router>
-    </PersistGate>
-  </ReduxProvider>
-);
+                    )
+                  }
+                  }
+                />
+              ))}
+              <Route component={NotFoundPage} />
+            </Switch>
+          </Router>
+        </PersistGate>
+      </ReduxProvider>
+    )
+  }
+}
+
+export default App

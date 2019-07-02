@@ -11,7 +11,7 @@ class PreRoundView extends React.Component {
     if (isAuth) {
       return <RoundView />
     }
-    return <Redirect path='/' />
+    return <Redirect to='/' />
   }
 }
 

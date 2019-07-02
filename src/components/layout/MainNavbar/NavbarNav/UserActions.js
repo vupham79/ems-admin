@@ -68,7 +68,7 @@ class UserActions extends React.Component {
             Transactions
           </DropdownItem>
           <DropdownItem divider />
-          <DropdownItem tag={Link} className="text-danger" onClick={this.onLogout}>
+          <DropdownItem tag={Link} className="text-danger" onClick={this.onLogout} to='/'>
             {/* <i className="material-icons text-danger">&#xE879;</i>  */}
             Logout
           </DropdownItem>

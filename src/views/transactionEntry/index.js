@@ -11,7 +11,7 @@ class PreTransactionEntryView extends React.Component {
     if (isAuth) {
       return <TransactionEntryView />
     }
-    return <Redirect path='/' />
+    return <Redirect to='/' />
   }
 }
 

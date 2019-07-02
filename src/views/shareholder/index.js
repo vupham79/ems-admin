@@ -11,7 +11,7 @@ class PreShareholderView extends React.Component {
     if (isAuth) {
       return <ShareholderView />
     }
-    return <Redirect path='/' />
+    return <Redirect to='/' />
   }
 }
 

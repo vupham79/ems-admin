@@ -4,7 +4,7 @@ import DefaultLayout from '../layout';
 // Route Views
 import View from '../views';
 
-export default [
+const routes = [
   {
     path: "/",
     exact: true,
@@ -50,8 +50,11 @@ export default [
     layout: DefaultLayout,
     component: View.TransactionEntryView,
   },
-  {
-    path: '*',
-    component: View.NotFoundView,
-  }
 ];
+
+const NotFoundPage = View.NotFoundView;
+
+export {
+  routes,
+  NotFoundPage
+}

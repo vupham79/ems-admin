@@ -11,7 +11,7 @@ class PreShareTypeView extends React.Component {
     if (isAuth) {
       return <ShareTypeView />
     }
-    return <Redirect path='/' />
+    return <Redirect to='/' />
   }
 }
 
