@@ -2,15 +2,18 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGIN,
+  LOGOUT,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
   LOAD_COMPANIES,
   LOAD_COMPANIES_SUCCESS,
   LOAD_COMPANIES_FAIL,
 } from '../action';
 
 const INITIAL_STATE = {
-  username: '',
-  password: '',
+  Username: '',
   companies: [],
+  selectedCompany: '',
   isAuth: false,
   isLoading: false,
 }
@@ -25,12 +28,25 @@ export default (state = INITIAL_STATE, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        username: action.payload.username,
-        password: action.payload.password,
+        username: action.payload.Username,
         isAuth: true,
         isLoading: false,
       };
     case LOGIN_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+      }
+    case LOGOUT:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case LOGOUT_SUCCESS:
+      return {
+        ...INITIAL_STATE,
+      }
+    case LOGOUT_FAIL:
       return {
         ...state,
         isLoading: false,

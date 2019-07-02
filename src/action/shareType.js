@@ -38,3 +38,75 @@ export function getShareTypes(data) {
     }
   }
 }
+
+export const UPDATE_SHARE_TYPE = 'UPDATE_SHARE_TYPE';
+export const UPDATE_SHARE_TYPE_SUCCESS = 'UPDATE_SHARE_TYPE_SUCCESS';
+export const UPDATE_SHARE_TYPE_FAIL = 'UPDATE_SHARE_TYPE_FAIL';
+
+export function updateShareType(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: UPDATE_SHARE_TYPE,
+    })
+    try {
+      const res = await fetchAPI({
+        method: 'PUT',
+        endpoints: GET_SHARE_TYPE,
+        data: {
+
+        }
+      });
+      if (res) {
+        dispatch({
+          type: UPDATE_SHARE_TYPE_SUCCESS,
+          data: res.data
+        })
+      } else {
+        dispatch({
+          type: UPDATE_SHARE_TYPE_FAIL
+        })
+      }
+    } catch (error) {
+      dispatch({
+        type: UPDATE_SHARE_TYPE_FAIL
+      });
+      console.log(error.message)
+    }
+  }
+}
+
+export const ADD_SHARE_TYPE = 'ADD_SHARE_TYPE';
+export const ADD_SHARE_TYPE_SUCCESS = 'ADD_SHARE_TYPE_SUCCESS';
+export const ADD_SHARE_TYPE_FAIL = 'ADD_SHARE_TYPE_FAIL';
+
+export function addShareType(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: ADD_SHARE_TYPE,
+    })
+    try {
+      const res = await fetchAPI({
+        method: 'POST',
+        endpoints: GET_SHARE_TYPE,
+        data: {
+
+        }
+      });
+      if (res) {
+        dispatch({
+          type: ADD_SHARE_TYPE_SUCCESS,
+          data: res.data
+        })
+      } else {
+        dispatch({
+          type: ADD_SHARE_TYPE_FAIL
+        })
+      }
+    } catch (error) {
+      dispatch({
+        type: ADD_SHARE_TYPE_FAIL
+      });
+      console.log(error.message)
+    }
+  }
+}

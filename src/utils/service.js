@@ -14,9 +14,6 @@ export default async ({ method = 'GET', data, headers, params, endpoints }) => {
     method,
     headers: {
       'Content-type': 'application/json'
-      // 'Access-Control-Allow-Origin': '*',
-      // 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
-      // 'Access-Control-Allow-Headers:': 'Content-Type',
     },
     url: `${API_URL}${endpoints}`,
     data: JSON.stringify(data),

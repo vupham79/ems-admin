@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Navbar, NavbarBrand } from "shards-react";
 import FshopLogo from '../../../asset/fshop.png';
-
 class SidebarMainNavbar extends React.Component {
   // constructor(props) {
   //   super(props);

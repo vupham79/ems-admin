@@ -9,9 +9,12 @@ import {
   NavItem,
   NavLink
 } from "shards-react";
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { logout } from '../../../../action';
 import AvatarDefault from '../../../../asset/avatar.jpg';
 
-export default class UserActions extends React.Component {
+class UserActions extends React.Component {
   constructor(props) {
     super(props);
 
@@ -28,7 +31,15 @@ export default class UserActions extends React.Component {
     });
   }
 
+  onLogout = () => {
+    const { logout } = this.props;
+    logout();
+  }
   render() {
+    const { isAuth } = this.props;
+    if (!isAuth) {
+      return <Redirect to='/' />
+    }
     return (
       <NavItem tag={Dropdown} caret toggle={this.toggleUserActions}>
         <DropdownToggle caret tag={NavLink} className="text-nowrap px-3">
@@ -57,7 +68,7 @@ export default class UserActions extends React.Component {
             Transactions
           </DropdownItem>
           <DropdownItem divider />
-          <DropdownItem tag={Link} to="/" className="text-danger">
+          <DropdownItem tag={Link} className="text-danger" onClick={this.onLogout}>
             {/* <i className="material-icons text-danger">&#xE879;</i>  */}
             Logout
           </DropdownItem>
@@ -66,3 +77,9 @@ export default class UserActions extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  isAuth: state.user.isAuth
+})
+
+export default connect(mapStateToProps, { logout })(UserActions)

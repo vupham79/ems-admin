@@ -9,7 +9,14 @@ import './style.css';
 
 class ShareAccountView extends React.Component {
   state = {
-
+    shareAccount: {},
+    newShareAccount: {
+      Username: '',
+      ShareholderTypeId: 0,
+      IsPublic: true,
+    },
+    isEdit: false,
+    isAdd: false,
   }
 
   componentDidMount() {
@@ -21,12 +28,14 @@ class ShareAccountView extends React.Component {
 
   render() {
     const { shareAccounts } = this.props;
+    const { shareAccount, newShareAccount } = this.state;
 
     return (
       <Container fluid className="main-content-container px-4">
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Share Accounts" className="text-sm-left" />
+          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Share Account</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -79,16 +88,13 @@ class ShareAccountView extends React.Component {
                             <Button onClick={() => this.onEditToggle(entry)} variant={'primary'}>
                               Edit
                             </Button>
-                            <Button variant={'danger'}>
-                              Remove
-                            </Button>
                           </td>
                         </tr>
                       )
                     })}
                     <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
                       <Modal.Header closeButton onHide={this.onEditToggle}>
-                        {/* <Modal.Title>Modal heading</Modal.Title> */}
+                        <Modal.Title>{shareAccount.UserAccount && shareAccount.UserAccount.Email}</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         {/* <div className='modalDiv'>
@@ -119,6 +125,39 @@ class ShareAccountView extends React.Component {
                         <Button variant="primary" onClick={this.onSave}>
                           Save Changes
                                 </Button>
+                      </Modal.Footer>
+                    </Modal>
+                    <Modal show={this.state.isAdd} onHide={this.onAddToggle}>
+                      <Modal.Header closeButton onHide={this.onAddToggle}>
+                        <Modal.Title>Add Shareholder</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div className='modalDiv'>
+                          <p>Shareholder</p>
+                          {/* <input name='ShareholderId' onChange={this.onChangeNewShareAccount} value={newShareAccount.Username} /> */}
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Share Type</p>
+                          {/* <Form.Control as="select" id='ShareholderTypeId' onChange={this.onChangeNewShareholder}>
+                            {shareholderTypes.map(type => {
+                              return (
+                                <option key={type.Id} value={type.Id}>{type.Name}</option>
+                              )
+                            })}
+                          </Form.Control> */}
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Balance</p>
+                          {/* <input name='ShareholderId' onChange={this.onChangeNewShareAccount} value={newShareAccount.Username} /> */}
+                        </div>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={this.onAddToggle}>
+                          Close
+                        </Button>
+                        <Button variant="primary" onClick={this.onAdd}>
+                          Add
+                        </Button>
                       </Modal.Footer>
                     </Modal>
                   </tbody>

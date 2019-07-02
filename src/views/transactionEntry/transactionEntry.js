@@ -7,16 +7,16 @@ import { getTransactions } from '../../action';
 import { bindActionCreators } from 'redux';
 import './style.css';
 
-class TransactionView extends React.Component {
+class TransactionEntryView extends React.Component {
   state = {
 
   }
 
   componentDidMount() {
-    const { getTransactions } = this.props;
-    getTransactions({
-      id: 7
-    });
+    // const { getTransactions } = this.props;
+    // getTransactions({
+    //   id: 7
+    // });
   }
 
   render() {
@@ -26,7 +26,7 @@ class TransactionView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Transactions" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Transaction</Button>
+          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Transaction Entry</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -61,7 +61,7 @@ class TransactionView extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {transactions && transactions.map((entry, index) => {
+                    {/* {transactions && transactions.map((entry, index) => {
                       const { Amount, TransactionType, UserAccount, UserAccount1 } = entry;
                       return (
                         <tr key={index}>
@@ -78,7 +78,7 @@ class TransactionView extends React.Component {
                           </td>
                         </tr>
                       )
-                    })}
+                    })} */}
                     <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
                       <Modal.Header closeButton onHide={this.onEditToggle}>
                         {/* <Modal.Title>Modal heading</Modal.Title> */}
@@ -127,13 +127,13 @@ class TransactionView extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    transactions: state.company.Transactions,
+    // transactions: state.company.Transactions,
   }
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    getTransactions
+    // getTransactions
   },
   dispatch,
 )
@@ -141,4 +141,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TransactionView);
+)(TransactionEntryView);

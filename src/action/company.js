@@ -8,6 +8,8 @@ import {
   GET_TRANSACTION
 } from '../utils/constants';
 
+export const TOAST = 'TOAST';
+
 export const LOAD_COMPANY = 'LOAD_COMPANY';
 export const LOAD_COMPANY_SUCCESS = 'LOAD_COMPANY_SUCCESS';
 export const LOAD_COMPANY_FAIL = 'LOAD_COMPANY_FAIL';
@@ -20,7 +22,7 @@ export function getCompany(data) {
     try {
       const res = await fetchAPI({
         method: 'GET',
-        params: { username: '6CmcvRLsHFfy142vM86uq2LgYj22' },
+        params: { username: data.Username },
         endpoints: GET_COMPANIES_BY_USERNAME,
       });
       if (res) {
@@ -52,8 +54,7 @@ export function updateCompany(company) {
       type: UPDATE_COMPANY,
     });
     try {
-      console.log('updateCompany');
-      const data1 = {
+      const payload = {
         Id: company.Id,
         Name: company.Name,
         Address: company.Address,
@@ -64,20 +65,12 @@ export function updateCompany(company) {
         Longtitude: company.Longtitude,
         Latitude: company.Latitude,
         Balance: company.Balance,
+        IsActive: company.IsActive
       };
-      // const stringifyData = JSON.stringify(data1);
-      // const stringData = `${stringifyData}`
-      // axios.put(`https://emsfpt.azurewebsites.net/api/Company/7`, company).then(response => {
-      //   console.log(response)
-      // }).catch(err => {
-      //   console.log('err: ', err.response)
-      // })
-      // console.log('Stringify data: ', stringifyData)
-      // console.log('String data: ', stringData)
       const res = await fetchAPI({
         method: 'PUT',
         data: {
-          ...data1,
+          ...payload,
         },
         endpoints: 'Company/' + company.Id,
       });
@@ -85,16 +78,19 @@ export function updateCompany(company) {
         dispatch({
           type: UPDATE_COMPANY_SUCCESS,
         })
+        return true
       } else {
         dispatch({
           type: UPDATE_COMPANY_FAIL,
         })
+        return false
       }
     } catch (error) {
       dispatch({
         type: UPDATE_COMPANY_FAIL,
       });
       console.log(error)
+      return false
     }
   }
 }
@@ -109,30 +105,49 @@ export function addCompany(company) {
       type: ADD_COMPANY,
     })
     try {
-      console.log('addCompany');
+      const payload = {
+        Name: company.Name,
+        Address: company.Address,
+        Phone: company.Phone,
+        EstablishedYear: company.EstablishedYear,
+        Email: company.Email,
+        AdminUsername: company.AdminUsername,
+        Longtitude: company.Longtitude,
+        Latitude: company.Latitude,
+        Balance: company.Balance,
+        IsActive: true,
+      };
       const res = await fetchAPI({
         method: 'POST',
         data: {
-          ...company,
-          AdminUsername: '6CmcvRLsHFfy142vM86uq2LgYj22',
+          ...payload,
         },
         endpoints: COMPANIES,
       });
-      console.log(res.data)
       if (res) {
         dispatch({
           type: ADD_COMPANY_SUCCESS,
         })
+        dispatch({
+          type: TOAST,
+          payload: {
+            header: 'Add new Company',
+            body: 'Adding success'
+          }
+        })
+        return true
       } else {
         dispatch({
           type: ADD_COMPANY_FAIL,
         })
+        return false
       }
     } catch (error) {
       dispatch({
         type: ADD_COMPANY_FAIL,
       });
       console.log(error)
+      return false
     }
   }
 }
@@ -198,6 +213,116 @@ export function getShareholders(data) {
         type: LOAD_SHAREHOLDERS_FAIL
       });
       console.log(error.message)
+    }
+  }
+}
+
+export const ADD_SHAREHOLDERS = 'ADD_SHAREHOLDERS';
+export const ADD_SHAREHOLDERS_SUCCESS = 'ADD_SHAREHOLDERS_SUCCESS';
+export const ADD_SHAREHOLDERS_FAIL = 'ADD_SHAREHOLDERS_FAIL';
+
+export function addShareholder(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: ADD_SHAREHOLDERS,
+    })
+    try {
+      let valid = true;
+      //Check if share holder is existed
+      const res1 = await fetchAPI({
+        method: 'GET',
+        params: { companyId: data.companyId },
+        endpoints: GET_SHAREHOLDER,
+      });
+      if (res1) {
+        res1.data.forEach(entry => {
+          console.log(entry);
+          if (entry.Username === data.Username) {
+            // Toast fail action
+            valid = false
+          }
+        });
+      }
+      //Add share holder
+      if (valid) {
+        const res = await fetchAPI({
+          method: 'POST',
+          params: {
+            companyId: data.Id,
+            amount: 0
+          },
+          data: {
+            Username: data.Username,
+            CompanyId: data.companyId,
+            ShareholderTypeId: data.ShareholderTypeId || 1,
+            IsPublic: data.IsPublic,
+            IsActive: true,
+          },
+          endpoints: GET_SHAREHOLDER,
+        });
+        if (res) {
+          dispatch({
+            type: ADD_SHAREHOLDERS_SUCCESS,
+          })
+          return true
+        } else {
+          dispatch({
+            type: ADD_SHAREHOLDERS_FAIL
+          })
+          return false
+        }
+      }
+    } catch (error) {
+      dispatch({
+        type: ADD_SHAREHOLDERS_FAIL
+      });
+      console.log(error.message)
+      return false
+    }
+  }
+}
+
+export const UPDATE_SHAREHOLDERS = 'UPDATE_SHAREHOLDERS';
+export const UPDATE_SHAREHOLDERS_SUCCESS = 'UPDATE_SHAREHOLDERS_SUCCESS';
+export const UPDATE_SHAREHOLDERS_FAIL = 'UPDATE_SHAREHOLDERS_FAIL';
+
+export function updateShareholder(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: UPDATE_SHAREHOLDERS,
+    })
+    try {
+      //Update share holder
+      const res = await fetchAPI({
+        method: 'PUT',
+        // params: { id: data.Id },
+        data: {
+          Id: data.Id,
+          Username: data.Username,
+          CompanyId: data.CompanyId,
+          ShareholderTypeId: data.ShareholderTypeId,
+          IsActive: data.IsActive,
+          IsPublic: data.IsPublic,
+        },
+        endpoints: `${GET_SHAREHOLDER}/${data.Id}`,
+      });
+      if (res) {
+        dispatch({
+          type: UPDATE_SHAREHOLDERS_SUCCESS,
+        })
+        return true
+      } else {
+        dispatch({
+          type: UPDATE_SHAREHOLDERS_FAIL
+        })
+        return false
+      }
+    } catch (error) {
+      dispatch({
+        type: UPDATE_SHAREHOLDERS_FAIL
+      });
+      console.log(error.message)
+      return false
     }
   }
 }

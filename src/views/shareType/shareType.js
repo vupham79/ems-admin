@@ -26,6 +26,7 @@ class ShareholdersView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Share Types" className="text-sm-left" />
+          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Share Type</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -61,9 +62,6 @@ class ShareholdersView extends React.Component {
                           <td className={'btnGroup'}>
                             <Button onClick={() => this.onEditToggle(entry)} variant={'primary'}>
                               Edit
-                            </Button>
-                            <Button variant={'danger'}>
-                              Remove
                             </Button>
                           </td>
                         </tr>

@@ -5,6 +5,7 @@ import { Button, Modal } from 'react-bootstrap';
 import PageTitle from '../../components/pageTitle';
 import { getCompanies, updateCompany, addCompany } from '../../action';
 import { bindActionCreators } from 'redux';
+import { Toggle } from "react-toggle-component";
 import './style.css';
 
 class CompanyView extends React.Component {
@@ -19,7 +20,6 @@ class CompanyView extends React.Component {
       EstablishedYear: 2000,
       Email: "tmasolutions@gmail.com",
       Balance: 250000,
-      // AdminUsername: "vMUB6yOUqggfW4NYeyEQQNlJb6o2",
       ImageUrl: "companies/tma.jpg",
       Longtitude: 10.8013167,
       Latitude: 106.6876928
@@ -27,8 +27,20 @@ class CompanyView extends React.Component {
   }
 
   componentDidMount() {
-    const { getCompanies } = this.props;
-    getCompanies();
+    const { getCompanies, username } = this.props;
+    getCompanies({
+      Username: username
+    });
+  }
+
+  onActiveToggle = () => {
+    const { company } = this.state;
+    this.setState({
+      company: {
+        ...company,
+        IsActive: !company.IsActive
+      }
+    })
   }
 
   onEditToggle = (company) => {
@@ -44,17 +56,32 @@ class CompanyView extends React.Component {
     this.setState({ isAdd: !isAdd })
   }
 
-  onSave = () => {
+  onSave = async () => {
     const { company } = this.state;
-    const { updateCompany } = this.props;
-    updateCompany(company);
+    const { updateCompany, getCompanies, username } = this.props;
+    const update = await updateCompany({
+      ...company,
+    });
+    if (update) {
+      await getCompanies({
+        Username: username
+      });
+    }
     this.onEditToggle();
   }
 
-  onAdd = () => {
+  onAdd = async () => {
     const { newCompany } = this.state;
-    const { addCompany } = this.props;
-    addCompany(newCompany);
+    const { addCompany, getCompanies, username } = this.props;
+    const add = await addCompany({
+      ...newCompany,
+      AdminUsername: username,
+    });
+    if (add) {
+      await getCompanies({
+        Username: username
+      });
+    }
     this.onAddToggle();
   }
 
@@ -209,6 +236,14 @@ class CompanyView extends React.Component {
           }
         })
         break;
+      case 'IsActive':
+        this.setState({
+          company: {
+            ...company,
+            IsActive: !this.state.isActive
+          }
+        })
+        break;
       default:
         break;
     }
@@ -223,7 +258,7 @@ class CompanyView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Company" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add New Company</Button>
+          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Company</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -256,6 +291,9 @@ class CompanyView extends React.Component {
                         Established Year
                   </th>
                       <th scope="col" className="border-0">
+                        Active
+                    </th>
+                      <th scope="col" className="border-0">
 
                       </th>
                     </tr>
@@ -271,12 +309,12 @@ class CompanyView extends React.Component {
                           <td>{entry.Email}</td>
                           <td>{entry.Phone}</td>
                           <td>{entry.EstablishedYear}</td>
+                          <td>{entry.IsActive ?
+                            <span style={{ color: '#17c671' }}>Available</span>
+                            : <span style={{ color: '#c4183c' }}>Unavailable</span>}</td>
                           <td className={'btnGroup'}>
                             <Button onClick={() => this.onEditToggle(entry)} variant={'primary'}>
                               Edit
-                            </Button>
-                            <Button variant={'danger'}>
-                              Remove
                             </Button>
                           </td>
                         </tr>
@@ -318,6 +356,18 @@ class CompanyView extends React.Component {
                         <div className='modalDiv'>
                           <p>Balance</p>
                           <input name='Balance' onChange={this.onChange} value={company.Balance} />
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Active</p>
+                          <Toggle
+                            name="toggle-1"
+                            checked={company.IsActive}
+                            rightBackgroundColor={'#17c671'}
+                            knobColor={'#FBFBFB'}
+                            leftBackgroundColor={'#868e96'}
+                            borderColor={'none'}
+                            onToggle={this.onActiveToggle}
+                          />
                         </div>
                       </Modal.Body>
                       <Modal.Footer>
@@ -394,6 +444,7 @@ class CompanyView extends React.Component {
 const mapStateToProps = state => {
   return {
     companies: state.user.companies,
+    username: state.user.Username,
   }
 };
 

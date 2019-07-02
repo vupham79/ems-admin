@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  min-height: 1000px;
+  background-position: 'center';
+  justify-content: center;
+}
+
+.formGroup {
+  padding: 20px;
+  width: 300px;
+  background-color: rgba(0,0,0,0.3);
+  color: aliceblue;
+}
+
+.btnSubmit {
+  margin-top: 10px;
+  background-color: #007bff !important;
+  color: white !important;
+  border: none !important;
+}

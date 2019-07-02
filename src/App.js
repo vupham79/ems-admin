@@ -6,12 +6,14 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider as ReduxProvider } from 'react-redux';
 import store, { persistor } from './store';
 
+import Toast from './components/Toast';
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 
 export default () => (
   <ReduxProvider store={store}>
     <PersistGate persistor={persistor}>
+      {/* <Toast /> */}
       <Router basename={process.env.REACT_APP_BASENAME || ""}>
         <div>
           {routes.map((route, index) => {
@@ -20,13 +22,13 @@ export default () => (
                 key={index}
                 path={route.path}
                 exact={route.exact}
-                component={() => {
-                  return (
+                component={() =>
+                  route.layout ?
                     <route.layout>
                       <route.component />
                     </route.layout>
-                  )
-                }}
+                    : <route.component />
+                }
               />
             );
           })}

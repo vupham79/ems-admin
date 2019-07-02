@@ -7,7 +7,7 @@ export const LOAD_ROUND_TYPES = 'LOAD_ROUND_TYPES';
 export const LOAD_ROUND_TYPES_SUCCESS = 'LOAD_ROUND_TYPES_SUCCESS';
 export const LOAD_ROUND_TYPES_FAIL = 'LOAD_ROUND_TYPES_FAIL';
 
-export function getRoundTypes(data) {
+export function getRoundTypes() {
   return async function action(dispatch) {
     dispatch({
       type: LOAD_ROUND_TYPES,

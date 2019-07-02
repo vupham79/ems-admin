@@ -9,8 +9,40 @@ export function login(payload) {
   return dispatch => {
     dispatch({
       type: LOGIN,
-      payload
     })
+    try {
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: {
+          Username: '6CmcvRLsHFfy142vM86uq2LgYj22',
+        }
+      })
+    } catch (error) {
+      dispatch({
+        type: LOGIN_FAIL,
+      })
+    }
+  }
+}
+
+export const LOGOUT = 'LOGOUT';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAIL = 'LOGOUT_FAIL';
+
+export function logout() {
+  return dispatch => {
+    dispatch({
+      type: LOGOUT,
+    })
+    try {
+      dispatch({
+        type: LOGOUT_SUCCESS,
+      })
+    } catch (error) {
+      dispatch({
+        type: LOGOUT_FAIL,
+      })
+    }
   }
 }
 

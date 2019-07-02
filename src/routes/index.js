@@ -8,12 +8,6 @@ export default [
   {
     path: "/",
     exact: true,
-    layout: DefaultLayout,
-    component: View.HomeView,
-  },
-  {
-    path: "/login",
-    layout: DefaultLayout,
     component: View.LoginView,
   },
   {
@@ -56,4 +50,8 @@ export default [
     layout: DefaultLayout,
     component: View.TransactionEntryView,
   },
+  {
+    path: '*',
+    component: View.NotFoundView,
+  }
 ];
