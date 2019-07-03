@@ -5,7 +5,7 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import PageTitle from '../../components/pageTitle';
 import { getShareholders, updateShareholder, addShareholder, getShareholderTypes } from '../../action';
 import { bindActionCreators } from 'redux';
-import { Toggle } from 'react-toggle-component';
+import Switch from '../../components/switch';
 import './style.css';
 
 class ShareholdersView extends React.Component {
@@ -72,7 +72,7 @@ class ShareholdersView extends React.Component {
   onEditToggle = (shareholder) => {
     this.setState(prevState => ({ isEdit: !prevState.isEdit }));
     if (shareholder) {
-      this.setState(prevState => ({ shareholder: shareholder }));
+      this.setState({ shareholder });
     }
   }
 
@@ -215,26 +215,18 @@ class ShareholdersView extends React.Component {
                       <Modal.Body>
                         <div className='modalDiv'>
                           <p>Active</p>
-                          <Toggle
-                            name="IsActiveUpdate"
-                            checked={shareholder.IsActive}
-                            rightBackgroundColor={'#17c671'}
-                            knobColor={'#FBFBFB'}
-                            leftBackgroundColor={'#868e96'}
-                            borderColor={'none'}
-                            onToggle={() => this.onActiveToggle('update')}
+                          <Switch
+                            className="d-flex"
+                            enabled={shareholder.IsActive}
+                            onStateChanged={() => this.onActiveToggle('update')}
                           />
                         </div>
                         <div className='modalDiv'>
                           <p>Public</p>
-                          <Toggle
-                            name="IsPublicUpdate"
-                            checked={shareholder.IsPublic}
-                            rightBackgroundColor={'#17c671'}
-                            knobColor={'#FBFBFB'}
-                            leftBackgroundColor={'#868e96'}
-                            borderColor={'none'}
-                            onToggle={() => this.onPublicToggle('update')}
+                          <Switch
+                            className="d-flex"
+                            enabled={shareholder.IsPublic}
+                            onStateChanged={() => this.onPublicToggle('update')}
                           />
                         </div>
                       </Modal.Body>
@@ -268,14 +260,10 @@ class ShareholdersView extends React.Component {
                         </div>
                         <div className='modalDiv'>
                           <p>Public</p>
-                          <Toggle
-                            name="IsPublicAdd"
-                            checked={newShareholder.IsPublic}
-                            rightBackgroundColor={'#17c671'}
-                            knobColor={'#FBFBFB'}
-                            leftBackgroundColor={'#868e96'}
-                            borderColor={'none'}
-                            onToggle={() => this.onPublicToggle('add')}
+                          <Switch
+                            className="d-flex"
+                            enabled={newShareholder.IsPublic}
+                            onStateChanged={() => this.onPublicToggle('add')}
                           />
                         </div>
                       </Modal.Body>

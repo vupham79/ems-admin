@@ -26,6 +26,17 @@ class ShareAccountView extends React.Component {
     });
   }
 
+  onEditToggle = (shareAccount) => {
+    this.setState(prevState => ({ isEdit: !prevState.isEdit }))
+    if (shareAccount) {
+      this.setState({ shareAccount })
+    }
+  }
+
+  onAddToggle = () => {
+    this.setState(prevState => ({ isAdd: !prevState.isAdd }))
+  }
+
   render() {
     const { shareAccounts } = this.props;
     const { shareAccount, newShareAccount } = this.state;

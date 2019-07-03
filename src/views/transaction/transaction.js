@@ -9,7 +9,10 @@ import './style.css';
 
 class TransactionView extends React.Component {
   state = {
-
+    transaction: {},
+    newTransaction: {},
+    isEdit: false,
+    isAdd: false,
   }
 
   componentDidMount() {
@@ -17,6 +20,17 @@ class TransactionView extends React.Component {
     getTransactions({
       id: 7
     });
+  }
+
+  onEditToggle = (transaction) => {
+    this.setState(prevState => ({ isEdit: !prevState.isEdit }))
+    if (transaction) {
+      this.setState({ transaction })
+    }
+  }
+
+  onAddToggle = () => {
+    this.setState(prevState => ({ isAdd: !prevState.isAdd }))
   }
 
   render() {
@@ -111,6 +125,41 @@ class TransactionView extends React.Component {
                                 </Button>
                         <Button variant="primary" onClick={this.onSave}>
                           Save Changes
+                                </Button>
+                      </Modal.Footer>
+                    </Modal>
+                    <Modal show={this.state.isAdd} onHide={this.onAddToggle}>
+                      <Modal.Header closeButton onHide={this.onAddToggle}>
+                        {/* <Modal.Title>Modal heading</Modal.Title> */}
+                      </Modal.Header>
+                      <Modal.Body>
+                        {/* <div className='modalDiv'>
+                          <p>Name</p>
+                          <input name={'Name'} onChange={this.onChange} value={company.Name} />
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Address</p>
+                          <input name={'Address'} onChange={this.onChange} value={company.Address} />
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Email</p>
+                          <input name={'Email'} onChange={this.onChange} value={company.Email} />
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Phone</p>
+                          <input name={'Phone'} onChange={this.onChange} value={company.Phone} />
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Established Year</p>
+                          <input name={'EstablishedYear'} onChange={this.onChange} value={company.EstablishedYear} />
+                        </div> */}
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={this.onAddToggle}>
+                          Close
+                                </Button>
+                        <Button variant="primary" onClick={this.onAdd}>
+                          Add
                                 </Button>
                       </Modal.Footer>
                     </Modal>

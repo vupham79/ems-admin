@@ -3,13 +3,18 @@ import { Container, Row, Col, Card, CardBody } from "shards-react";
 import { connect } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
 import PageTitle from '../../components/pageTitle';
-import { getShareTypes } from '../../action';
+import { getShareTypes, updateShareType, addShareType, removeShareType } from '../../action';
 import { bindActionCreators } from 'redux';
 import './style.css';
 
 class ShareholdersView extends React.Component {
   state = {
-
+    sharetype: {},
+    newSharetype: {},
+    removeShareType: {},
+    isEdit: false,
+    isAdd: false,
+    isRemove: false,
   }
 
   componentDidMount() {
@@ -19,8 +24,108 @@ class ShareholdersView extends React.Component {
     });
   }
 
+  onEditToggle = (sharetype) => {
+    this.setState(prevState => ({ isEdit: !prevState.isEdit }))
+    if (sharetype) {
+      this.setState({ sharetype })
+    }
+  }
+
+  onAddToggle = () => {
+    this.setState(prevState => ({ isAdd: !prevState.isAdd }))
+  }
+
+  onAdd = async () => {
+    const { getShareTypes, addShareType } = this.props;
+    const { newSharetype } = this.state;
+    const add = await addShareType({
+      ...newSharetype,
+      CompanyId: 7,
+    });
+    if (add) {
+      await getShareTypes({
+        id: 7,
+      })
+    }
+    this.onAddToggle();
+  }
+
+  onRemoveToggle = (removeShareType) => {
+    this.setState(prevState => ({
+      isRemove: !prevState.isRemove,
+    }))
+    if (removeShareType) {
+      this.setState({
+        removeShareType
+      })
+    }
+  }
+
+  onRemove = async () => {
+    const { removeShareType, getShareTypes } = this.props;
+    const { removeShareType: sharetype } = this.state;
+    const remove = await removeShareType({
+      Id: sharetype.Id
+    });
+    if (remove) {
+      await getShareTypes({
+        id: 7,
+      })
+    }
+    this.onRemoveToggle();
+  }
+
+  onChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'Name':
+        this.setState(prevState => ({
+          sharetype: {
+            ...prevState.sharetype,
+            Name: value,
+          }
+        }))
+        break;
+      default:
+        break;
+    }
+  }
+
+  onChangeNewSharetype = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'Name':
+        this.setState(prevState => ({
+          newSharetype: {
+            ...prevState.newSharetype,
+            Name: value,
+          }
+        }))
+        break;
+      default:
+        break;
+    }
+  }
+
+  onSave = async () => {
+    const { getShareTypes, updateShareType } = this.props;
+    const { sharetype } = this.state;
+    const update = await updateShareType({
+      ...sharetype,
+      CompanyId: 7,
+    })
+    if (update) {
+      await getShareTypes({
+        id: 7,
+      })
+    }
+    this.onEditToggle();
+  }
+
   render() {
     const { sharetypes } = this.props;
+    const { sharetype, newSharetype, removeShareType } = this.state;
+
     return (
       <Container fluid className="main-content-container px-4">
         {/* Page Header */}
@@ -63,35 +168,22 @@ class ShareholdersView extends React.Component {
                             <Button onClick={() => this.onEditToggle(entry)} variant={'primary'}>
                               Edit
                             </Button>
+                            <Button onClick={() => this.onRemoveToggle(entry)} variant={'danger'}>
+                              Remove
+                            </Button>
                           </td>
                         </tr>
                       )
                     })}
                     <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
                       <Modal.Header closeButton onHide={this.onEditToggle}>
-                        {/* <Modal.Title>Modal heading</Modal.Title> */}
+                        <Modal.Title>Id: {sharetype.Id}</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        {/* <div className='modalDiv'>
+                        <div className='modalDiv'>
                           <p>Name</p>
-                          <input name={'Name'} onChange={this.onChange} value={company.Name} />
+                          <input name={'Name'} onChange={this.onChange} value={sharetype.Name} />
                         </div>
-                        <div className='modalDiv'>
-                          <p>Address</p>
-                          <input name={'Address'} onChange={this.onChange} value={company.Address} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Email</p>
-                          <input name={'Email'} onChange={this.onChange} value={company.Email} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Phone</p>
-                          <input name={'Phone'} onChange={this.onChange} value={company.Phone} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Established Year</p>
-                          <input name={'EstablishedYear'} onChange={this.onChange} value={company.EstablishedYear} />
-                        </div> */}
                       </Modal.Body>
                       <Modal.Footer>
                         <Button variant="secondary" onClick={this.onEditToggle}>
@@ -99,6 +191,43 @@ class ShareholdersView extends React.Component {
                                 </Button>
                         <Button variant="primary" onClick={this.onSave}>
                           Save Changes
+                                </Button>
+                      </Modal.Footer>
+                    </Modal>
+                    <Modal show={this.state.isAdd} onHide={this.onAddToggle}>
+                      <Modal.Header closeButton onHide={this.onAddToggle}>
+                        <Modal.Title>Add new</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div className='modalDiv'>
+                          <p>Name</p>
+                          <input name={'Name'} onChange={this.onChangeNewSharetype} value={newSharetype.Name} />
+                        </div>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={this.onAddToggle}>
+                          Close
+                                </Button>
+                        <Button variant="primary" onClick={this.onAdd}>
+                          Add
+                                </Button>
+                      </Modal.Footer>
+                    </Modal>
+                    <Modal show={this.state.isRemove} onHide={this.onRemoveToggle}>
+                      <Modal.Header closeButton onHide={this.onRemoveToggle}>
+                        <Modal.Title>Add new</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div className='modalDiv'>
+                          <p>You want to remove sharetype #{removeShareType.Id} - {removeShareType.Name}?</p>
+                        </div>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={this.onRemoveToggle}>
+                          Cancel
+                                </Button>
+                        <Button variant="primary" onClick={this.onRemove}>
+                          Confirm
                                 </Button>
                       </Modal.Footer>
                     </Modal>
@@ -121,7 +250,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    getShareTypes
+    getShareTypes, updateShareType, addShareType, removeShareType
   },
   dispatch,
 )

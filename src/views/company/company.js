@@ -5,7 +5,7 @@ import { Button, Modal } from 'react-bootstrap';
 import PageTitle from '../../components/pageTitle';
 import { getCompanies, updateCompany, addCompany } from '../../action';
 import { bindActionCreators } from 'redux';
-import { Toggle } from "react-toggle-component";
+import Switch from '../../components/switch';
 import './style.css';
 
 class CompanyView extends React.Component {
@@ -14,15 +14,15 @@ class CompanyView extends React.Component {
     isAdd: false,
     company: {},
     newCompany: {
-      Name: "TMA Solution",
-      Address: "1 Dien Bien Phu",
-      Phone: "0123456789",
-      EstablishedYear: 2000,
-      Email: "tmasolutions@gmail.com",
-      Balance: 250000,
-      ImageUrl: "companies/tma.jpg",
-      Longtitude: 10.8013167,
-      Latitude: 106.6876928
+      Name: "",
+      Address: "",
+      Phone: "",
+      EstablishedYear: '',
+      Email: "",
+      Balance: 0,
+      ImageUrl: "",
+      Longtitude: 0,
+      Latitude: 0,
     },
   }
 
@@ -44,8 +44,7 @@ class CompanyView extends React.Component {
   }
 
   onEditToggle = (company) => {
-    const { isEdit } = this.state;
-    this.setState({ isEdit: !isEdit })
+    this.setState(prevState => ({ isEdit: !prevState.isEdit }))
     if (company) {
       this.setState({ company });
     }
@@ -322,51 +321,47 @@ class CompanyView extends React.Component {
                     })}
                     <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
                       <Modal.Header closeButton onHide={this.onEditToggle}>
-                        {/* <Modal.Title>Modal heading</Modal.Title> */}
+                        <Modal.Title>{company.Name}</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <div className='modalDiv'>
                           <p>Name</p>
-                          <input name='Name' onChange={this.onChange} value={company.Name} />
+                          <input name='Name' onChange={this.onChange} value={company.Name || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Address</p>
-                          <input name='Address' onChange={this.onChange} value={company.Address} />
+                          <input name='Address' onChange={this.onChange} value={company.Address || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Email</p>
-                          <input name='Email' onChange={this.onChange} value={company.Email} />
+                          <input name='Email' onChange={this.onChange} value={company.Email || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Phone</p>
-                          <input name='Phone' onChange={this.onChange} value={company.Phone} />
+                          <input name='Phone' onChange={this.onChange} value={company.Phone || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Established Year</p>
-                          <input name='EstablishedYear' onChange={this.onChange} value={company.EstablishedYear} />
+                          <input name='EstablishedYear' onChange={this.onChange} value={company.EstablishedYear || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Latitude</p>
-                          <input name='Latitude' onChange={this.onChange} value={company.Latitude} />
+                          <input name='Latitude' onChange={this.onChange} value={company.Latitude || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>ImageUrl</p>
-                          <input name='ImageUrl' onChange={this.onChange} value={company.ImageUrl} />
+                          <input name='ImageUrl' onChange={this.onChange} value={company.ImageUrl || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Balance</p>
-                          <input name='Balance' onChange={this.onChange} value={company.Balance} />
+                          <input name='Balance' onChange={this.onChange} value={company.Balance || ''} />
                         </div>
                         <div className='modalDiv'>
                           <p>Active</p>
-                          <Toggle
-                            name="toggle-1"
-                            checked={company.IsActive}
-                            rightBackgroundColor={'#17c671'}
-                            knobColor={'#FBFBFB'}
-                            leftBackgroundColor={'#868e96'}
-                            borderColor={'none'}
-                            onToggle={this.onActiveToggle}
+                          <Switch
+                            className="d-flex"
+                            enabled={company.IsActive}
+                            onStateChanged={this.onActiveToggle}
                           />
                         </div>
                       </Modal.Body>

@@ -51,26 +51,30 @@ export function updateShareType(data) {
     try {
       const res = await fetchAPI({
         method: 'PUT',
-        endpoints: GET_SHARE_TYPE,
+        endpoints: `${GET_SHARE_TYPE}/${data.Id}`,
         data: {
-
+          Id: data.Id,
+          CompanyId: data.CompanyId,
+          Name: data.Name,
         }
       });
       if (res) {
         dispatch({
           type: UPDATE_SHARE_TYPE_SUCCESS,
-          data: res.data
         })
+        return true
       } else {
         dispatch({
           type: UPDATE_SHARE_TYPE_FAIL
         })
+        return false
       }
     } catch (error) {
       dispatch({
         type: UPDATE_SHARE_TYPE_FAIL
       });
       console.log(error.message)
+      return false
     }
   }
 }
@@ -89,24 +93,62 @@ export function addShareType(data) {
         method: 'POST',
         endpoints: GET_SHARE_TYPE,
         data: {
-
+          CompanyId: data.CompanyId,
+          Name: data.Name,
         }
       });
       if (res) {
         dispatch({
           type: ADD_SHARE_TYPE_SUCCESS,
-          data: res.data
         })
+        return true
       } else {
         dispatch({
           type: ADD_SHARE_TYPE_FAIL
         })
+        return false
       }
     } catch (error) {
       dispatch({
         type: ADD_SHARE_TYPE_FAIL
       });
       console.log(error.message)
+      return false
+    }
+  }
+}
+
+export const REMOVE_SHARE_TYPE = 'REMOVE_SHARE_TYPE';
+export const REMOVE_SHARE_TYPE_SUCCESS = 'REMOVE_SHARE_TYPE_SUCCESS';
+export const REMOVE_SHARE_TYPE_FAIL = 'REMOVE_SHARE_TYPE_FAIL';
+
+export function removeShareType(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: REMOVE_SHARE_TYPE,
+    })
+    try {
+      const res = await fetchAPI({
+        method: 'DELETE',
+        endpoints: `${GET_SHARE_TYPE}/${data.Id}`,
+      });
+      if (res) {
+        dispatch({
+          type: REMOVE_SHARE_TYPE_SUCCESS,
+        })
+        return true
+      } else {
+        dispatch({
+          type: REMOVE_SHARE_TYPE_FAIL
+        })
+        return false
+      }
+    } catch (error) {
+      dispatch({
+        type: REMOVE_SHARE_TYPE_FAIL
+      });
+      console.log(error.message)
+      return false
     }
   }
 }
