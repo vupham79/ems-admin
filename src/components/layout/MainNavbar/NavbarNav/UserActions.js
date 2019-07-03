@@ -31,24 +31,27 @@ class UserActions extends React.Component {
     });
   }
 
-  onLogout = () => {
-    const { logout } = this.props;
-    logout();
+  onLogout = async () => {
+    const { logout, signOut } = this.props;
+    await signOut();
+    await logout();
   }
+
   render() {
-    const { isAuth } = this.props;
-    if (!isAuth) {
+    const { userProfile } = this.props;
+    if (!userProfile.isAuth) {
       return <Redirect to='/' />
     }
+
     return (
       <NavItem tag={Dropdown} caret toggle={this.toggleUserActions}>
         <DropdownToggle caret tag={NavLink} className="text-nowrap px-3">
           <img
             className="user-avatar rounded-circle mr-2"
-            src={AvatarDefault}
+            src={userProfile.photoURL || AvatarDefault}
             alt="User Avatar"
           />{" "}
-          <span className="d-none d-md-inline-block">Vu Pham</span>
+          <span className="d-none d-md-inline-block">{userProfile.displayName}</span>
         </DropdownToggle>
         <Collapse tag={DropdownMenu} right small open={this.state.visible}>
           <DropdownItem tag={Link} to="user-profile">
@@ -79,7 +82,7 @@ class UserActions extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isAuth: state.user.isAuth
+  userProfile: state.user,
 })
 
 export default connect(mapStateToProps, { logout })(UserActions)

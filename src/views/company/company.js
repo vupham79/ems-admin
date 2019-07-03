@@ -27,9 +27,9 @@ class CompanyView extends React.Component {
   }
 
   componentDidMount() {
-    const { getCompanies, username } = this.props;
+    const { getCompanies, userProfile } = this.props;
     getCompanies({
-      Username: username
+      Username: userProfile.uid
     });
   }
 
@@ -57,13 +57,13 @@ class CompanyView extends React.Component {
 
   onSave = async () => {
     const { company } = this.state;
-    const { updateCompany, getCompanies, username } = this.props;
+    const { updateCompany, getCompanies, userProfile } = this.props;
     const update = await updateCompany({
       ...company,
     });
     if (update) {
       await getCompanies({
-        Username: username
+        Username: userProfile.uid
       });
     }
     this.onEditToggle();
@@ -71,14 +71,14 @@ class CompanyView extends React.Component {
 
   onAdd = async () => {
     const { newCompany } = this.state;
-    const { addCompany, getCompanies, username } = this.props;
+    const { addCompany, getCompanies, userProfile } = this.props;
     const add = await addCompany({
       ...newCompany,
-      AdminUsername: username,
+      AdminUsername: userProfile.uid,
     });
     if (add) {
       await getCompanies({
-        Username: username
+        Username: userProfile.uid
       });
     }
     this.onAddToggle();
@@ -249,7 +249,7 @@ class CompanyView extends React.Component {
   }
 
   render() {
-    const { companies } = this.props;
+    const { userProfile: { companies } } = this.props;
     const { company, newCompany } = this.state;
 
     return (
@@ -438,8 +438,7 @@ class CompanyView extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    companies: state.user.companies,
-    username: state.user.Username,
+    userProfile: state.user,
   }
 };
 

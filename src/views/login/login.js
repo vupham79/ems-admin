@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from 'react-bootstrap';
+import { Button, Form, ButtonToolbar } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { login } from '../../action';
 import BackImage from '../../asset/background.jpg';
@@ -14,24 +14,37 @@ class LoginView extends React.Component {
     Password: '',
   }
 
-  onLogin = () => {
-    const { login } = this.props;
-    login();
+  onLogin = async () => {
+    const { login, signOut } = this.props;
+    const { uid, email, displayName, photoURL } = this.props.user
+    await login({
+      uid: uid,
+      email: email,
+      displayName: displayName,
+      photoURL: photoURL,
+      signOut: signOut
+    });
+    return <Redirect to='/company' />
   }
 
   render() {
+    const {
+      user,
+      signInWithGoogle,
+    } = this.props;
+
     const { User } = this.props;
     if (User.isAuth) {
       return <Redirect to='/company' />
+    } else if (user && user.uid) {
+      this.onLogin();
     }
+
     return (
       <div className="wrapper" style={{ backgroundImage: `url(${BackImage})` }}>
         <Form.Group controlId="formBasicEmail" className="formGroup">
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter password" />
-          <Form.Control type="submit" value="Login" className="btnSubmit" onClick={this.onLogin} />
+          <p className="title">EMS Admin</p>
+          <Form.Control type="submit" value="Login by Email" className="btnSubmit" onClick={signInWithGoogle} />
         </Form.Group>
       </div>
     )

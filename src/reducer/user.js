@@ -11,7 +11,10 @@ import {
 } from '../action';
 
 const INITIAL_STATE = {
-  Username: '',
+  uid: '',
+  email: '',
+  displayName: '',
+  photoURL: '',
   companies: [],
   selectedCompany: '',
   isAuth: false,
@@ -28,7 +31,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        username: action.payload.Username,
+        ...action.payload,
         isAuth: true,
         isLoading: false,
       };

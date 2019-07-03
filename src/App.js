@@ -6,10 +6,21 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider as ReduxProvider } from 'react-redux';
 import store, { persistor } from './store';
 
-import Toast from './components/Toast';
+//Firebase
+import withFirebaseAuth from 'react-with-firebase-auth'
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import { firebaseConfig } from './utils/constants';
+
+// import Toast from './components/Toast';
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseAppAuth = firebaseApp.auth();
+const providers = {
+  googleProvider: new firebase.auth.GoogleAuthProvider(),
+};
 class App extends React.Component {
   render() {
     return (
@@ -26,12 +37,12 @@ class App extends React.Component {
                   component={() => {
                     if (route.layout) {
                       return (
-                        <route.layout>
-                          <route.component />
+                        <route.layout signOut={this.props.signOut}>
+                          <route.component user={this.props.user} />
                         </route.layout>)
                     }
                     return (
-                      <route.component />
+                      <route.component signInWithGoogle={this.props.signInWithGoogle} user={this.props.user} />
                     )
                   }
                   }
@@ -46,4 +57,7 @@ class App extends React.Component {
   }
 }
 
-export default App
+export default withFirebaseAuth({
+  providers,
+  firebaseAppAuth,
+})(App);

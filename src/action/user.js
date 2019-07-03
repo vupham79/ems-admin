@@ -14,7 +14,10 @@ export function login(payload) {
       dispatch({
         type: LOGIN_SUCCESS,
         payload: {
-          Username: '6CmcvRLsHFfy142vM86uq2LgYj22',
+          uid: payload.uid,
+          email: payload.email,
+          displayName: payload.displayName,
+          photoURL: payload.photoURL,
         }
       })
     } catch (error) {
@@ -58,7 +61,7 @@ export function getCompanies(data) {
     try {
       const res = await fetchAPI({
         method: 'GET',
-        params: { username: '6CmcvRLsHFfy142vM86uq2LgYj22' },
+        params: { username: data.Username },
         endpoints: GET_COMPANIES_BY_USERNAME,
       });
       if (res) {

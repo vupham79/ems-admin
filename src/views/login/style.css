@@ -15,7 +15,15 @@
 
 .btnSubmit {
   margin-top: 10px;
-  background-color: #007bff !important;
+  font-family: 'Avenir';
+  font-size: 16px !important;
+  font-weight: bold !important;
+  background-color: #fc4b30 !important;
   color: white !important;
   border: none !important;
+}
+
+.title {
+  text-align: center;
+  font-size: 16px;
 }

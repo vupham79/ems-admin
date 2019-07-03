@@ -4,9 +4,9 @@ import { Nav } from "shards-react";
 import Notifications from "./Notifications";
 import UserActions from "./UserActions";
 
-export default () => (
+export default ({ signOut }) => (
   <Nav navbar className="border-left flex-row">
     <Notifications />
-    <UserActions />
+    <UserActions signOut={signOut} />
   </Nav>
 );

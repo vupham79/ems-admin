@@ -19,6 +19,7 @@ class DefaultLayout extends React.Component {
       loadShareType,
       loadTransaction,
       loadTransactionEntry } = this.props;
+    const { signOut } = this.props;
     const { children, noNavbar, noFooter } = this.props;
     let loading = false;
 
@@ -39,7 +40,7 @@ class DefaultLayout extends React.Component {
             sm="12"
             tag="main"
           >
-            {!noNavbar && <MainNavbar />}
+            {!noNavbar && <MainNavbar signOut={signOut} />}
             <Spinner animation="border" role="status" className={'spinner'} style={{ display: !loading ? 'none' : 'inline-table' }}>
               <span className="sr-only">Loading...</span>
             </Spinner>
