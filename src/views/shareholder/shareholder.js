@@ -3,8 +3,9 @@ import { Container, Row, Col, Card, CardBody } from "shards-react";
 import { connect } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import PageTitle from '../../components/pageTitle';
-import { getShareholders, updateShareholder, addShareholder, getShareholderTypes } from '../../action';
+import { getShareholders, updateShareholder, addShareholder, getShareholderTypes, getUserAccounts } from '../../action';
 import { bindActionCreators } from 'redux';
+import SelectSearch from 'react-select-search'
 import Switch from '../../components/switch';
 import './style.css';
 
@@ -17,17 +18,24 @@ class ShareholdersView extends React.Component {
       ShareholderTypeId: 0,
       IsPublic: true,
     },
+    searchUsername: '',
+    usersNotShareholder: [],
     isEdit: false,
     isAdd: false,
   }
 
   componentDidMount() {
-    const { getShareholders, shareholderTypes, getShareholderTypes } = this.props;
-    getShareholders({
-      id: 7
-    });
-    if (shareholderTypes.length <= 0) {
-      getShareholderTypes();
+    const { getShareholders, shareholderTypes, getShareholderTypes, selectedCompany, getUserAccounts, userAccounts } = this.props;
+    if (selectedCompany) {
+      getShareholders({
+        id: selectedCompany.Id
+      });
+      if (!shareholderTypes) {
+        getShareholderTypes();
+      }
+      if (!userAccounts) {
+        getUserAccounts();
+      }
     }
   }
 
@@ -77,28 +85,49 @@ class ShareholdersView extends React.Component {
   }
 
   onAddToggle = () => {
+    if (!this.state.isAdd) {
+      const { userAccounts, shareholders } = this.props;
+      const usersNotShareholder = [];
+      for (let i = 0; i < userAccounts.length; i++) {
+        const userAccount = userAccounts[i];
+        for (let j = 0; j < shareholders.length; j++) {
+          const shareholder = shareholders[j];
+          if (userAccount.Username === shareholder.Username) {
+            break;
+          }
+          if (j === shareholders.length - 1) {
+            const obj = {
+              name: userAccount.Email,
+              value: userAccount.Username,
+            }
+            usersNotShareholder.push(obj)
+          }
+        }
+      }
+      this.setState({ usersNotShareholder: usersNotShareholder });
+    }
     this.setState(prevState => ({ isAdd: !prevState.isAdd }));
   }
 
   onSave = async () => {
-    const { updateShareholder, getShareholders } = this.props;
+    const { updateShareholder, getShareholders, selectedCompany } = this.props;
     const { shareholder } = this.state;
     const update = await updateShareholder(shareholder);
     if (update) {
       getShareholders({
-        id: 7
+        id: selectedCompany.Id
       });
     }
     this.onEditToggle();
   }
 
   onAdd = async () => {
-    const { addShareholder, getShareholders } = this.props;
+    const { addShareholder, getShareholders, selectedCompany } = this.props;
     const { newShareholder } = this.state;
     const add = await addShareholder(newShareholder);
     if (add) {
       getShareholders({
-        id: 7
+        id: selectedCompany.Id
       });
     }
     this.onAddToggle();
@@ -138,16 +167,20 @@ class ShareholdersView extends React.Component {
     }
   }
 
+  handleChangeSearch = (e) => {
+    this.setState({ searchUsername: e.target.value });
+  }
+
   render() {
     const { shareholders, shareholderTypes } = this.props;
-    const { shareholder, newShareholder } = this.state;
+    const { shareholder, newShareholder, usersNotShareholder } = this.state;
 
     return (
       <Container fluid className="main-content-container px-4">
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Shareholders" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Shareholder</Button>
+          <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Shareholder</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -246,12 +279,12 @@ class ShareholdersView extends React.Component {
                       <Modal.Body>
                         <div className='modalDiv'>
                           <p>Username</p>
-                          <input name='Username' onChange={this.onChangeNewShareholder} value={newShareholder.Username} />
+                          <SelectSearch options={usersNotShareholder} value="sv" name="language" />
                         </div>
                         <div className='modalDiv'>
                           <p>Shareholder Type</p>
                           <Form.Control as="select" id='ShareholderTypeId' onChange={this.onChangeNewShareholder}>
-                            {shareholderTypes.map(type => {
+                            {shareholderTypes && shareholderTypes.map(type => {
                               return (
                                 <option key={type.Id} value={type.Id}>{type.Name}</option>
                               )
@@ -291,12 +324,14 @@ const mapStateToProps = state => {
   return {
     shareholderTypes: state.shareholderTypes.shareholderTypes,
     shareholders: state.company.Shareholders,
+    selectedCompany: state.user.selectedCompany,
+    userAccounts: state.userAccounts.userAccounts,
   }
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    getShareholders, updateShareholder, addShareholder, getShareholderTypes
+    getShareholders, updateShareholder, addShareholder, getShareholderTypes, getUserAccounts
   },
   dispatch,
 )

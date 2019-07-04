@@ -9,6 +9,7 @@ import shareType from './sharetype';
 import transaction from './transaction';
 import transactionEntry from './transactionEntry';
 import shareholderTypes from './shareholderTypes';
+import userAccounts from './userAccount';
 
 export default combineReducers({
   user,
@@ -21,4 +22,5 @@ export default combineReducers({
   transaction,
   transactionEntry,
   shareholderTypes,
+  userAccounts,
 });

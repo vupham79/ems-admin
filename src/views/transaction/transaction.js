@@ -16,10 +16,12 @@ class TransactionView extends React.Component {
   }
 
   componentDidMount() {
-    const { getTransactions } = this.props;
-    getTransactions({
-      id: 7
-    });
+    const { getTransactions, selectedCompany } = this.props;
+    if (selectedCompany) {
+      getTransactions({
+        id: selectedCompany.Id
+      });
+    }
   }
 
   onEditToggle = (transaction) => {
@@ -40,7 +42,7 @@ class TransactionView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Transactions" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Transaction</Button>
+          <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Transaction</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -177,6 +179,7 @@ class TransactionView extends React.Component {
 const mapStateToProps = state => {
   return {
     transactions: state.company.Transactions,
+    selectedCompany: state.user.selectedCompany
   }
 };
 

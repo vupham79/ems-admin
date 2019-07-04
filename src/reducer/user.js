@@ -8,6 +8,9 @@ import {
   LOAD_COMPANIES,
   LOAD_COMPANIES_SUCCESS,
   LOAD_COMPANIES_FAIL,
+  SELECT_COMPANY,
+  SELECT_COMPANY_SUCCESS,
+  SELECT_COMPANY_FAIL,
 } from '../action';
 
 const INITIAL_STATE = {
@@ -15,8 +18,8 @@ const INITIAL_STATE = {
   email: '',
   displayName: '',
   photoURL: '',
-  companies: [],
-  selectedCompany: '',
+  companies: null,
+  selectedCompany: null,
   isAuth: false,
   isLoading: false,
 }
@@ -37,7 +40,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case LOGIN_FAIL:
       return {
-        ...state,
+        ...INITIAL_STATE,
         isLoading: false,
       }
     case LOGOUT:
@@ -68,6 +71,24 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_COMPANIES_FAIL:
       return {
         ...state,
+        companies: null,
+        isLoading: false,
+      }
+    case SELECT_COMPANY:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case SELECT_COMPANY_SUCCESS:
+      return {
+        ...state,
+        selectedCompany: action.payload,
+        isLoading: false,
+      }
+    case SELECT_COMPANY_FAIL:
+      return {
+        ...state,
+        selectedCompany: null,
         isLoading: false,
       }
     default:

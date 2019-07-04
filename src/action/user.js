@@ -1,5 +1,5 @@
 import fetchAPI from '../utils/service';
-import { GET_COMPANIES_BY_USERNAME } from '../utils/constants';
+import { GET_USER_ACCOUNT } from '../utils/constants';
 
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -61,13 +61,12 @@ export function getCompanies(data) {
     try {
       const res = await fetchAPI({
         method: 'GET',
-        params: { username: data.Username },
-        endpoints: GET_COMPANIES_BY_USERNAME,
+        endpoints: `${GET_USER_ACCOUNT}/${data.Username}`,
       });
       if (res) {
         dispatch({
           type: LOAD_COMPANIES_SUCCESS,
-          payload: res.data
+          payload: res.data.Companies
         })
       } else {
         dispatch({
@@ -77,6 +76,29 @@ export function getCompanies(data) {
     } catch (error) {
       dispatch({
         type: LOAD_COMPANIES_FAIL
+      });
+      console.log(error.message)
+    }
+  }
+}
+
+export const SELECT_COMPANY = 'SELECT_COMPANY';
+export const SELECT_COMPANY_SUCCESS = 'SELECT_COMPANY_SUCCESS';
+export const SELECT_COMPANY_FAIL = 'SELECT_COMPANY_FAIL';
+
+export function selectCompany(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: SELECT_COMPANY,
+    })
+    try {
+      dispatch({
+        type: SELECT_COMPANY_SUCCESS,
+        payload: data
+      })
+    } catch (error) {
+      dispatch({
+        type: SELECT_COMPANY_FAIL
       });
       console.log(error.message)
     }

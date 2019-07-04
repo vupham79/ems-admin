@@ -1,7 +1,7 @@
 import { LOAD_SHAREHOLDER_TYPES, LOAD_SHAREHOLDER_TYPES_SUCCESS, LOAD_SHAREHOLDER_TYPES_FAIL } from '../action';
 
 const INITIAL_STATE = {
-  shareholderTypes: [],
+  shareholderTypes: null,
   isLoading: false,
 }
 
@@ -21,6 +21,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_SHAREHOLDER_TYPES_FAIL:
       return {
         ...state,
+        shareholderTypes: null,
         isLoading: false,
       };
     default:

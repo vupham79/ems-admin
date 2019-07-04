@@ -1,31 +1,31 @@
 import {
-  LOAD_ROUND_TYPES,
-  LOAD_ROUND_TYPES_SUCCESS,
-  LOAD_ROUND_TYPES_FAIL,
+  LOAD_USER_ACCOUNTS,
+  LOAD_USER_ACCOUNTS_SUCCESS,
+  LOAD_USER_ACCOUNTS_FAIL,
 } from '../action';
 
 const INITIAL_STATE = {
+  userAccounts: null,
   isLoading: false,
-  roundTypes: null,
 }
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case LOAD_ROUND_TYPES:
+    case LOAD_USER_ACCOUNTS:
       return {
         ...state,
         isLoading: true,
-      }
-    case LOAD_ROUND_TYPES_SUCCESS:
+      };
+    case LOAD_USER_ACCOUNTS_SUCCESS:
       return {
         ...state,
-        roundTypes: action.data,
+        userAccounts: action.data,
         isLoading: false,
-      }
-    case LOAD_ROUND_TYPES_FAIL:
+      };
+    case LOAD_USER_ACCOUNTS_FAIL:
       return {
         ...state,
-        roundTypes: null,
+        userAccounts: null,
         isLoading: false,
       }
     default:

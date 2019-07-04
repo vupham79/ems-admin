@@ -20,9 +20,11 @@ class RoundView extends React.Component {
   }
 
   componentDidMount() {
-    const { getRoundTypes, getRounds } = this.props;
-    getRoundTypes();
-    getRounds({ id: 7 });
+    const { getRoundTypes, getRounds, selectedCompany } = this.props;
+    if (selectedCompany) {
+      getRoundTypes();
+      getRounds({ id: selectedCompany.Id });
+    }
   }
 
   onEditToggle = (round) => {
@@ -138,27 +140,27 @@ class RoundView extends React.Component {
   }
 
   onSave = async () => {
-    const { updateRound, getRounds } = this.props;
+    const { updateRound, getRounds, selectedCompany } = this.props;
     const { round } = this.state;
     const update = await updateRound({
       ...round
     })
     if (update) {
-      await getRounds({ id: 7 });
+      await getRounds({ id: selectedCompany.Id });
       this.setState({ filterRounds: [] })
     }
     this.onEditToggle();
   }
 
   onAdd = async () => {
-    const { addRound, getRounds } = this.props;
+    const { addRound, getRounds, selectedCompany } = this.props;
     const { newRound } = this.state;
     const add = await addRound({
       ...newRound,
       CompanyId: 7,
     })
     if (add) {
-      await getRounds({ id: 7 });
+      await getRounds({ id: selectedCompany.Id });
       this.setState({ filterRounds: [] })
     }
     this.onAddToggle();
@@ -167,7 +169,6 @@ class RoundView extends React.Component {
   render() {
     const { filterRounds, round, newRound } = this.state;
     const { roundTypes } = this.props
-    console.log('length: ', filterRounds.length)
     if (filterRounds.length <= 0) {
       this.filterRounds();
     }
@@ -176,7 +177,7 @@ class RoundView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Rounds" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Round</Button>
+          <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Round</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -317,6 +318,7 @@ const mapStateToProps = state => {
   return {
     rounds: state.company.Rounds,
     roundTypes: state.roundType.roundTypes,
+    selectedCompany: state.user.selectedCompany,
   }
 };
 

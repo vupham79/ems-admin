@@ -26,7 +26,7 @@ class TransactionEntryView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Transactions" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Transaction Entry</Button>
+          <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Transaction Entry</Button>
         </Row>
 
         {/* Default Light Table */}

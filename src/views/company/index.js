@@ -7,9 +7,9 @@ import {
 
 class PreCompanyView extends React.Component {
   render() {
-    const { isAuth } = this.props;
+    const { isAuth, storage } = this.props;
     if (isAuth) {
-      return <CompanyView />
+      return <CompanyView storage={storage} />
     }
     return <Redirect to='/' />
   }
@@ -19,4 +19,4 @@ const mapStateToProps = state => ({
   isAuth: state.user.isAuth,
 });
 
-export default connect(mapStateToProps, null)(PreCompanyView);
+export default connect(mapStateToProps)(PreCompanyView);

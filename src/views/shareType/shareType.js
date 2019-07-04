@@ -18,10 +18,12 @@ class ShareholdersView extends React.Component {
   }
 
   componentDidMount() {
-    const { getShareTypes } = this.props;
-    getShareTypes({
-      id: 7
-    });
+    const { getShareTypes, selectedCompany } = this.props;
+    if (selectedCompany) {
+      getShareTypes({
+        id: selectedCompany.Id
+      });
+    }
   }
 
   onEditToggle = (sharetype) => {
@@ -36,15 +38,15 @@ class ShareholdersView extends React.Component {
   }
 
   onAdd = async () => {
-    const { getShareTypes, addShareType } = this.props;
+    const { getShareTypes, addShareType, selectedCompany } = this.props;
     const { newSharetype } = this.state;
     const add = await addShareType({
       ...newSharetype,
-      CompanyId: 7,
+      CompanyId: selectedCompany.Id,
     });
     if (add) {
       await getShareTypes({
-        id: 7,
+        id: selectedCompany.Id,
       })
     }
     this.onAddToggle();
@@ -62,14 +64,14 @@ class ShareholdersView extends React.Component {
   }
 
   onRemove = async () => {
-    const { removeShareType, getShareTypes } = this.props;
+    const { removeShareType, getShareTypes, selectedCompany } = this.props;
     const { removeShareType: sharetype } = this.state;
     const remove = await removeShareType({
       Id: sharetype.Id
     });
     if (remove) {
       await getShareTypes({
-        id: 7,
+        id: selectedCompany.Id,
       })
     }
     this.onRemoveToggle();
@@ -108,15 +110,15 @@ class ShareholdersView extends React.Component {
   }
 
   onSave = async () => {
-    const { getShareTypes, updateShareType } = this.props;
+    const { getShareTypes, updateShareType, selectedCompany } = this.props;
     const { sharetype } = this.state;
     const update = await updateShareType({
       ...sharetype,
-      CompanyId: 7,
+      CompanyId: selectedCompany.Id,
     })
     if (update) {
       await getShareTypes({
-        id: 7,
+        id: selectedCompany.Id,
       })
     }
     this.onEditToggle();
@@ -131,7 +133,7 @@ class ShareholdersView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Share Types" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Share Type</Button>
+          <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Share Type</Button>
         </Row>
 
         {/* Default Light Table */}
@@ -245,6 +247,7 @@ class ShareholdersView extends React.Component {
 const mapStateToProps = state => {
   return {
     sharetypes: state.company.ShareTypes,
+    selectedCompany: state.user.selectedCompany
   }
 };
 

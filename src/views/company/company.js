@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, CardBody } from "shards-react";
 import { connect } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
 import PageTitle from '../../components/pageTitle';
-import { getCompanies, updateCompany, addCompany } from '../../action';
+import { getCompanies, updateCompany, addCompany, selectCompany } from '../../action';
 import { bindActionCreators } from 'redux';
 import Switch from '../../components/switch';
 import './style.css';
@@ -24,14 +24,46 @@ class CompanyView extends React.Component {
       Longtitude: 0,
       Latitude: 0,
     },
+    images: {},
   }
 
   componentDidMount() {
-    const { getCompanies, userProfile } = this.props;
+    const { getCompanies, uid } = this.props;
     getCompanies({
-      Username: userProfile.uid
+      Username: uid
     });
   }
+
+  renderCompanies = async () => {
+    // const { getCompanies, uid } = this.props;
+    // await getCompanies({
+    //   Username: uid
+    // });
+    // if (get) {
+    //   const { userProfile: { companies }, storage } = this.props;
+    //   const images = {};
+    //   companies.forEach(company => {
+    //     storage.ref(company.ImageUrl).getDownloadURL().then((url) => {
+    //       images[company.Name] = url;
+    //     })
+    //   });
+    //   this.setState({ images });
+    // }
+  }
+
+  onSelect = (company) => {
+    const { selectCompany } = this.props;
+    selectCompany(company);
+  }
+
+  // getImages = () => {
+  //   const { companies, storage } = this.props;
+  //   companies.forEach(company => {
+  //     storage.ref(company.ImageUrl).getDownloadURL().then((url) => {
+  //       this.setState[company.ImageUrl] = url;
+  //     })
+  //   });
+  // }
 
   onActiveToggle = () => {
     const { company } = this.state;
@@ -57,13 +89,13 @@ class CompanyView extends React.Component {
 
   onSave = async () => {
     const { company } = this.state;
-    const { updateCompany, getCompanies, userProfile } = this.props;
+    const { updateCompany, getCompanies, uid } = this.props;
     const update = await updateCompany({
       ...company,
     });
     if (update) {
       await getCompanies({
-        Username: userProfile.uid
+        Username: uid
       });
     }
     this.onEditToggle();
@@ -71,14 +103,14 @@ class CompanyView extends React.Component {
 
   onAdd = async () => {
     const { newCompany } = this.state;
-    const { addCompany, getCompanies, userProfile } = this.props;
+    const { addCompany, getCompanies, uid } = this.props;
     const add = await addCompany({
       ...newCompany,
-      AdminUsername: userProfile.uid,
+      AdminUsername: uid,
     });
     if (add) {
       await getCompanies({
-        Username: userProfile.uid
+        Username: uid
       });
     }
     this.onAddToggle();
@@ -249,188 +281,262 @@ class CompanyView extends React.Component {
   }
 
   render() {
-    const { userProfile: { companies } } = this.props;
+    const { companies, selectedCompany } = this.props;
     const { company, newCompany } = this.state;
-
+    console.log('companies: ', companies)
     return (
-      <Container fluid className="main-content-container px-4">
-        {/* Page Header */}
-        <Row noGutters className="page-header py-4">
-          <PageTitle sm="4" title="Company" className="text-sm-left" />
-          <Button variant="primary" size="sm" onClick={this.onAddToggle}>Add Company</Button>
-        </Row>
+      <Container fluid className={`main-content-container px-4 ${!companies && 'wrapper'}`}>
+        {!companies ?
+          <React.Fragment>
+            <Button className={"btnAdd"} onClick={this.onAddToggle} variant="info">Add new company</Button>
+            <Modal show={this.state.isAdd} onHide={this.onAddToggle}>
+              <Modal.Header closeButton onHide={this.onAddToggle}>
+                <Modal.Title>Add new Company</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className='modalDiv'>
+                  <p>Name</p>
+                  <input name='Name' onChange={this.onChangeNewCompany} value={newCompany.Name} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Address</p>
+                  <input name='Address' onChange={this.onChangeNewCompany} value={newCompany.Address} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Email</p>
+                  <input name='Email' onChange={this.onChangeNewCompany} value={newCompany.Email} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Phone</p>
+                  <input name='Phone' onChange={this.onChangeNewCompany} value={newCompany.Phone} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Established Year</p>
+                  <input name='EstablishedYear' onChange={this.onChangeNewCompany} value={newCompany.EstablishedYear} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Longtitude</p>
+                  <input name='Longtitude' onChange={this.onChangeNewCompany} value={newCompany.Longtitude} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Latitude</p>
+                  <input name='Latitude' onChange={this.onChangeNewCompany} value={newCompany.Latitude} />
+                </div>
+                <div className='modalDiv'>
+                  <p>ImageUrl</p>
+                  <input name='ImageUrl' onChange={this.onChangeNewCompany} value={newCompany.ImageUrl} />
+                </div>
+                <div className='modalDiv'>
+                  <p>Balance</p>
+                  <input name='Balance' onChange={this.onChangeNewCompany} value={newCompany.Balance} />
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.onAddToggle}>
+                  Close
+                                </Button>
+                <Button variant="primary" onClick={this.onAdd}>
+                  Add
+                                </Button>
+              </Modal.Footer>
+            </Modal>
+          </React.Fragment>
+          :
+          <React.Fragment>
+            {/* Page Header */}
+            <Row noGutters className="page-header py-4">
+              <PageTitle sm="4" title="Company" className="text-sm-left" />
+              <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Company</Button>
+            </Row>
 
-        {/* Default Light Table */}
-        <Row>
-          <Col>
-            <Card small className="mb-4">
-              <CardBody className="p-0 pb-3">
-                <table className="table mb-0">
-                  <thead className="bg-light">
-                    <tr>
-                      <th scope="col" className="border-0">
-                        #
+            {/* Default Light Table */}
+            <Row>
+              <Col>
+                <Card small className="mb-4">
+                  <CardBody className="p-0 pb-3">
+                    <table className="table mb-0">
+                      <thead className="bg-light">
+                        <tr>
+                          <th scope="col" className="border-0">
+                            #
                   </th>
-                      <th scope="col" className="border-0">
-                        Logo
+                          <th scope="col" className="border-0">
+                            Logo
                   </th>
-                      <th scope="col" className="border-0">
-                        Name
+                          <th scope="col" className="border-0">
+                            Name
                   </th>
-                      <th scope="col" className="border-0">
-                        Address
+                          <th scope="col" className="border-0">
+                            Address
                   </th>
-                      <th scope="col" className="border-0">
-                        Email
+                          <th scope="col" className="border-0">
+                            Email
                   </th>
-                      <th scope="col" className="border-0">
-                        Phone
+                          <th scope="col" className="border-0">
+                            Phone
                   </th>
-                      <th scope="col" className="border-0">
-                        Established Year
+                          <th scope="col" className="border-0">
+                            Established Year
                   </th>
-                      <th scope="col" className="border-0">
-                        Active
+                          <th scope="col" className="border-0">
+                            Active
                     </th>
-                      <th scope="col" className="border-0">
+                          <th scope="col" className="border-0">
 
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {companies && companies.map((entry, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{entry.ImageUrl}</td>
-                          <td>{entry.Name}</td>
-                          <td>{entry.Address}</td>
-                          <td>{entry.Email}</td>
-                          <td>{entry.Phone}</td>
-                          <td>{entry.EstablishedYear}</td>
-                          <td>{entry.IsActive ?
-                            <span style={{ color: '#17c671' }}>Available</span>
-                            : <span style={{ color: '#c4183c' }}>Unavailable</span>}</td>
-                          <td className={'btnGroup'}>
-                            <Button onClick={() => this.onEditToggle(entry)} variant={'primary'}>
-                              Edit
-                            </Button>
-                          </td>
+                          </th>
                         </tr>
-                      )
-                    })}
-                    <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
-                      <Modal.Header closeButton onHide={this.onEditToggle}>
-                        <Modal.Title>{company.Name}</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        <div className='modalDiv'>
-                          <p>Name</p>
-                          <input name='Name' onChange={this.onChange} value={company.Name || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Address</p>
-                          <input name='Address' onChange={this.onChange} value={company.Address || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Email</p>
-                          <input name='Email' onChange={this.onChange} value={company.Email || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Phone</p>
-                          <input name='Phone' onChange={this.onChange} value={company.Phone || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Established Year</p>
-                          <input name='EstablishedYear' onChange={this.onChange} value={company.EstablishedYear || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Latitude</p>
-                          <input name='Latitude' onChange={this.onChange} value={company.Latitude || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>ImageUrl</p>
-                          <input name='ImageUrl' onChange={this.onChange} value={company.ImageUrl || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Balance</p>
-                          <input name='Balance' onChange={this.onChange} value={company.Balance || ''} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Active</p>
-                          <Switch
-                            className="d-flex"
-                            enabled={company.IsActive}
-                            onStateChanged={this.onActiveToggle}
-                          />
-                        </div>
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={this.onEditToggle}>
-                          Close
+                      </thead>
+                      <tbody>
+                        {companies && companies.map((entry, index) => {
+                          return (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td><img className="logoCompany" src={entry.Name} alt={entry.ImageUrl} /></td>
+                              <td>{entry.Name}</td>
+                              <td>{entry.Address}</td>
+                              <td>{entry.Email}</td>
+                              <td>{entry.Phone}</td>
+                              <td>{entry.EstablishedYear}</td>
+                              <td>{entry.IsActive ?
+                                <span style={{ color: '#17c671' }}>Available</span>
+                                : <span style={{ color: '#c4183c' }}>Unavailable</span>}</td>
+                              <td className={'btnGroup'}>
+                                {selectedCompany ?
+                                  entry.Id !== selectedCompany.Id &&
+                                  <Button
+                                    onClick={() => this.onSelect(entry)}
+                                    variant={'outline-info'}
+                                  >
+                                    Select
                                 </Button>
-                        <Button variant="primary" onClick={this.onSave}>
-                          Save Changes
+                                  : <Button
+                                    onClick={() => this.onSelect(entry)}
+                                    variant={'outline-info'}
+                                  >
+                                    Select
+                                  </Button>
+                                }
+                                <Button onClick={() => this.onEditToggle(entry)} variant={'primary'}>
+                                  Edit
+                            </Button>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                        <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
+                          <Modal.Header closeButton onHide={this.onEditToggle}>
+                            <Modal.Title>{company.Name}</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <div className='modalDiv'>
+                              <p>Name</p>
+                              <input name='Name' onChange={this.onChange} value={company.Name || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Address</p>
+                              <input name='Address' onChange={this.onChange} value={company.Address || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Email</p>
+                              <input name='Email' onChange={this.onChange} value={company.Email || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Phone</p>
+                              <input name='Phone' onChange={this.onChange} value={company.Phone || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Established Year</p>
+                              <input name='EstablishedYear' onChange={this.onChange} value={company.EstablishedYear || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Latitude</p>
+                              <input name='Latitude' onChange={this.onChange} value={company.Latitude || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>ImageUrl</p>
+                              <input name='ImageUrl' onChange={this.onChange} value={company.ImageUrl || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Balance</p>
+                              <input name='Balance' onChange={this.onChange} value={company.Balance || ''} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Active</p>
+                              <Switch
+                                className="d-flex"
+                                enabled={company.IsActive}
+                                onStateChanged={this.onActiveToggle}
+                              />
+                            </div>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={this.onEditToggle}>
+                              Close
                                 </Button>
-                      </Modal.Footer>
-                    </Modal>
-                    <Modal show={this.state.isAdd} onHide={this.onAddToggle}>
-                      <Modal.Header closeButton onHide={this.onAddToggle}>
-                        <Modal.Title>Add new Company</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        <div className='modalDiv'>
-                          <p>Name</p>
-                          <input name='Name' onChange={this.onChangeNewCompany} value={newCompany.Name} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Address</p>
-                          <input name='Address' onChange={this.onChangeNewCompany} value={newCompany.Address} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Email</p>
-                          <input name='Email' onChange={this.onChangeNewCompany} value={newCompany.Email} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Phone</p>
-                          <input name='Phone' onChange={this.onChangeNewCompany} value={newCompany.Phone} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Established Year</p>
-                          <input name='EstablishedYear' onChange={this.onChangeNewCompany} value={newCompany.EstablishedYear} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Longtitude</p>
-                          <input name='Longtitude' onChange={this.onChangeNewCompany} value={newCompany.Longtitude} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Latitude</p>
-                          <input name='Latitude' onChange={this.onChangeNewCompany} value={newCompany.Latitude} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>ImageUrl</p>
-                          <input name='ImageUrl' onChange={this.onChangeNewCompany} value={newCompany.ImageUrl} />
-                        </div>
-                        <div className='modalDiv'>
-                          <p>Balance</p>
-                          <input name='Balance' onChange={this.onChangeNewCompany} value={newCompany.Balance} />
-                        </div>
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={this.onAddToggle}>
-                          Close
+                            <Button variant="primary" onClick={this.onSave}>
+                              Save Changes
                                 </Button>
-                        <Button variant="primary" onClick={this.onAdd}>
-                          Add
+                          </Modal.Footer>
+                        </Modal>
+                        <Modal show={this.state.isAdd} onHide={this.onAddToggle}>
+                          <Modal.Header closeButton onHide={this.onAddToggle}>
+                            <Modal.Title>Add new Company</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <div className='modalDiv'>
+                              <p>Name</p>
+                              <input name='Name' onChange={this.onChangeNewCompany} value={newCompany.Name} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Address</p>
+                              <input name='Address' onChange={this.onChangeNewCompany} value={newCompany.Address} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Email</p>
+                              <input name='Email' onChange={this.onChangeNewCompany} value={newCompany.Email} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Phone</p>
+                              <input name='Phone' onChange={this.onChangeNewCompany} value={newCompany.Phone} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Established Year</p>
+                              <input name='EstablishedYear' onChange={this.onChangeNewCompany} value={newCompany.EstablishedYear} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Longtitude</p>
+                              <input name='Longtitude' onChange={this.onChangeNewCompany} value={newCompany.Longtitude} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Latitude</p>
+                              <input name='Latitude' onChange={this.onChangeNewCompany} value={newCompany.Latitude} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>ImageUrl</p>
+                              <input name='ImageUrl' onChange={this.onChangeNewCompany} value={newCompany.ImageUrl} />
+                            </div>
+                            <div className='modalDiv'>
+                              <p>Balance</p>
+                              <input name='Balance' onChange={this.onChangeNewCompany} value={newCompany.Balance} />
+                            </div>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={this.onAddToggle}>
+                              Close
                                 </Button>
-                      </Modal.Footer>
-                    </Modal>
-                  </tbody>
-                </table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+                            <Button variant="primary" onClick={this.onAdd}>
+                              Add
+                                </Button>
+                          </Modal.Footer>
+                        </Modal>
+                      </tbody>
+                    </table>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </React.Fragment>
+        }
       </Container>
     )
   }
@@ -438,13 +544,15 @@ class CompanyView extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    userProfile: state.user,
+    uid: state.user.uid,
+    companies: state.user.companies,
+    selectedCompany: state.user.selectedCompany,
   }
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    getCompanies, updateCompany, addCompany
+    getCompanies, updateCompany, addCompany, selectCompany
   },
   dispatch,
 )

@@ -45,11 +45,11 @@ const routes = [
     layout: DefaultLayout,
     component: View.RoundView,
   },
-  {
-    path: "/transactionEntry",
-    layout: DefaultLayout,
-    component: View.TransactionEntryView,
-  },
+  // {
+  //   path: "/transactionEntry",
+  //   layout: DefaultLayout,
+  //   component: View.TransactionEntryView,
+  // },
 ];
 
 const NotFoundPage = View.NotFoundView;

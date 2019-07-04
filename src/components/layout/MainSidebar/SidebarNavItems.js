@@ -39,11 +39,11 @@ class SidebarNavItems extends React.Component {
           htmlBefore: '<i class="material-icons">person</i>',
           to: "/transaction",
         },
-        {
-          title: "Transaction Entry",
-          htmlBefore: '<i class="material-icons">error</i>',
-          to: "/transactionEntry",
-        },
+        // {
+        //   title: "Transaction Entry",
+        //   htmlBefore: '<i class="material-icons">error</i>',
+        //   to: "/transactionEntry",
+        // },
         {
           title: "Share Type",
           htmlBefore: '<i class="material-icons">error</i>',

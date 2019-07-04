@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Navbar, NavbarBrand } from "shards-react";
+import { connect } from 'react-redux';
 import FshopLogo from '../../../asset/fshop.png';
 class SidebarMainNavbar extends React.Component {
   // constructor(props) {
@@ -8,7 +9,7 @@ class SidebarMainNavbar extends React.Component {
   // }
 
   render() {
-    const { hideLogoText } = this.props;
+    const { hideLogoText, selectedCompany } = this.props;
     return (
       <div className="main-navbar">
         <Navbar
@@ -25,12 +26,12 @@ class SidebarMainNavbar extends React.Component {
                 id="main-logo"
                 className="d-inline-block align-top mr-1"
                 style={{ maxWidth: "50px" }}
-                src={FshopLogo}
-                alt=""
+                src={selectedCompany ? selectedCompany.ImageUrl : FshopLogo}
+              // alt={'Company Logo'}
               />
               {!hideLogoText && (
                 <span className="d-none d-md-inline ml-1">
-                  FPT Software
+                  {selectedCompany && selectedCompany.Name}
                 </span>
               )}
             </div>
@@ -59,4 +60,8 @@ SidebarMainNavbar.defaultProps = {
   hideLogoText: false
 };
 
-export default SidebarMainNavbar;
+const mapStateToProps = state => ({
+  selectedCompany: state.user.selectedCompany,
+})
+
+export default connect(mapStateToProps, null)(SidebarMainNavbar);

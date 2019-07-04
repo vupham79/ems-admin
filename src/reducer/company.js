@@ -31,12 +31,12 @@ const INITIAL_STATE = {
   ImageUrl: '',
   Latitude: '',
   Longtitude: '',
-  Shareholders: [],
-  ShareAccounts: [],
-  Rounds: [],
-  Transactions: [],
-  TransactionEntries: [],
-  ShareTypes: [],
+  Shareholders: null,
+  ShareAccounts: null,
+  Rounds: null,
+  Transactions: null,
+  TransactionEntries: null,
+  ShareTypes: null,
   isLoading: false,
 }
 
@@ -65,7 +65,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case LOAD_COMPANY_FAIL:
       return {
-        ...state,
+        ...INITIAL_STATE,
         isLoading: false,
       }
     case LOAD_SHAREHOLDERS:
@@ -82,6 +82,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_SHAREHOLDERS_FAIL:
       return {
         ...state,
+        Shareholders: null,
         isLoading: false,
       }
     case LOAD_SHAREACCOUNTS:
@@ -98,6 +99,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_SHAREACCOUNTS_FAIL:
       return {
         ...state,
+        ShareAccounts: null,
         isLoading: false,
       }
     case LOAD_ROUNDS:
@@ -114,6 +116,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_ROUNDS_FAIL:
       return {
         ...state,
+        Rounds: null,
         isLoading: false,
       }
     case LOAD_TRANSACTIONS:
@@ -130,6 +133,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_TRANSACTIONS_FAIL:
       return {
         ...state,
+        Transactions: null,
         isLoading: false,
       }
     case LOAD_SHARE_TYPES:
@@ -146,6 +150,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_SHARE_TYPES_FAIL:
       return {
         ...state,
+        ShareTypes: null,
         isLoading: false,
       }
     default:
