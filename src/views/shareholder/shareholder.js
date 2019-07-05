@@ -18,7 +18,6 @@ class ShareholdersView extends React.Component {
       ShareholderTypeId: 0,
       IsPublic: true,
     },
-    searchUsername: '',
     usersNotShareholder: [],
     isEdit: false,
     isAdd: false,
@@ -279,7 +278,7 @@ class ShareholdersView extends React.Component {
                       <Modal.Body>
                         <div className='modalDiv'>
                           <p>Username</p>
-                          <SelectSearch options={usersNotShareholder} value="sv" name="language" />
+                          <SelectSearch options={usersNotShareholder} onChange={(e) => console.log(e)} />
                         </div>
                         <div className='modalDiv'>
                           <p>Shareholder Type</p>
