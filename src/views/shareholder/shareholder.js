@@ -16,6 +16,7 @@ class ShareholdersView extends React.Component {
       Username: '',
       companyId: 7,
       ShareholderTypeId: 0,
+      balance: 0,
       IsPublic: true,
     },
     usersNotShareholder: [],
@@ -144,19 +145,19 @@ class ShareholdersView extends React.Component {
       }))
     } else {
       switch (target.name) {
-        case 'Username':
-          this.setState({
-            newShareholder: {
-              ...newShareholder,
-              Username: target.value
-            }
-          })
-          break;
         case 'IsPublic':
           this.setState({
             newShareholder: {
               ...newShareholder,
               IsPublic: target.value
+            }
+          })
+          break;
+        case 'Balance':
+          this.setState({
+            newShareholder: {
+              ...newShareholder,
+              balance: target.value
             }
           })
           break;
@@ -278,7 +279,7 @@ class ShareholdersView extends React.Component {
                       <Modal.Body>
                         <div className='modalDiv'>
                           <p>Username</p>
-                          <SelectSearch options={usersNotShareholder} onChange={(e) => console.log(e)} />
+                          <SelectSearch options={usersNotShareholder} onChange={this.onChangeUsername} />
                         </div>
                         <div className='modalDiv'>
                           <p>Shareholder Type</p>
@@ -289,6 +290,10 @@ class ShareholdersView extends React.Component {
                               )
                             })}
                           </Form.Control>
+                        </div>
+                        <div className='modalDiv'>
+                          <p>Balance</p>
+                          <input name={'Balance'} type={'number'} onChange={this.onChangeNewShareholder} value={newShareholder.balance} />
                         </div>
                         <div className='modalDiv'>
                           <p>Public</p>

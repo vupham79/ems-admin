@@ -24,31 +24,18 @@ class CompanyView extends React.Component {
       Longtitude: 0,
       Latitude: 0,
     },
-    images: {},
   }
 
   componentDidMount() {
-    const { getCompanies, uid } = this.props;
-    getCompanies({
-      Username: uid
-    });
+    this.renderCompanies();
   }
 
-  renderCompanies = async () => {
-    // const { getCompanies, uid } = this.props;
-    // await getCompanies({
-    //   Username: uid
-    // });
-    // if (get) {
-    //   const { userProfile: { companies }, storage } = this.props;
-    //   const images = {};
-    //   companies.forEach(company => {
-    //     storage.ref(company.ImageUrl).getDownloadURL().then((url) => {
-    //       images[company.Name] = url;
-    //     })
-    //   });
-    //   this.setState({ images });
-    // }
+  renderCompanies = () => {
+    const { getCompanies, uid, storage } = this.props;
+    getCompanies({
+      Username: uid,
+      storage
+    });
   }
 
   onSelect = (company) => {
@@ -56,14 +43,23 @@ class CompanyView extends React.Component {
     selectCompany(company);
   }
 
-  // getImages = () => {
-  //   const { companies, storage } = this.props;
-  //   companies.forEach(company => {
-  //     storage.ref(company.ImageUrl).getDownloadURL().then((url) => {
-  //       this.setState[company.ImageUrl] = url;
-  //     })
-  //   });
-  // }
+  getImages = () => {
+    const { companies, storage } = this.props;
+    const images = {};
+
+    companies.forEach(company => {
+      storage.ref(company.ImageUrl).getDownloadURL().then((url) => {
+        images[`${company.ImageUrl}`] = url;
+      })
+    });
+    this.setState({ companyLogos: images })
+  }
+
+  renderImage = (ImageUrl) => {
+    const { companyLogos } = this.state;
+    console.log('test: ', companyLogos[`${ImageUrl}`])
+    return <img className={'logoCompany'} src={companyLogos[ImageUrl]} alt={ImageUrl} />
+  }
 
   onActiveToggle = () => {
     const { company } = this.state;
@@ -283,7 +279,6 @@ class CompanyView extends React.Component {
   render() {
     const { companies, selectedCompany } = this.props;
     const { company, newCompany } = this.state;
-    console.log('companies: ', companies)
     return (
       <Container fluid className={`main-content-container px-4 ${!companies && 'wrapper'}`}>
         {!companies ?
@@ -391,7 +386,7 @@ class CompanyView extends React.Component {
                           return (
                             <tr key={index}>
                               <td>{index + 1}</td>
-                              <td><img className="logoCompany" src={entry.Name} alt={entry.ImageUrl} /></td>
+                              <td><img className="logoCompany" src={`${entry.ImageUrl}`} alt={entry.ImageUrl} /></td>
                               <td>{entry.Name}</td>
                               <td>{entry.Address}</td>
                               <td>{entry.Email}</td>

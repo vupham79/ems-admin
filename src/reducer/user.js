@@ -28,7 +28,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case LOGIN:
       return {
-        ...state,
+        ...INITIAL_STATE,
         isLoading: true,
       };
     case LOGIN_SUCCESS:
@@ -60,6 +60,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOAD_COMPANIES:
       return {
         ...state,
+        companies: null,
         isLoading: true,
       }
     case LOAD_COMPANIES_SUCCESS:

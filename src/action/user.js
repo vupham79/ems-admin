@@ -64,6 +64,12 @@ export function getCompanies(data) {
         endpoints: `${GET_USER_ACCOUNT}/${data.Username}`,
       });
       if (res) {
+        const { storage } = data;
+        res.data.Companies.forEach(company => {
+          storage.ref(company.ImageUrl).getDownloadURL().then((url) => {
+            company.ImageUrl = url
+          })
+        });
         dispatch({
           type: LOAD_COMPANIES_SUCCESS,
           payload: res.data.Companies

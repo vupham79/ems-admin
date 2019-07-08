@@ -21,16 +21,16 @@ class SidebarMainNavbar extends React.Component {
             href="#"
             style={{ lineHeight: "25px" }}
           >
-            <div className="d-table m-auto">
+            <div className="m-auto" style={{ display: 'flex', alignItems: 'center' }}>
               <img
                 id="main-logo"
                 className="d-inline-block align-top mr-1"
-                style={{ maxWidth: "50px" }}
+                style={{ maxWidth: "40px" }}
                 src={selectedCompany ? selectedCompany.ImageUrl : FshopLogo}
-              // alt={'Company Logo'}
+                alt={''}
               />
               {!hideLogoText && (
-                <span className="d-none d-md-inline ml-1">
+                <span className="d-none d-md-inline ml-1" style={{ verticalAlign: 'middle' }}>
                   {selectedCompany && selectedCompany.Name}
                 </span>
               )}
