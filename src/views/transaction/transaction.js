@@ -41,7 +41,7 @@ class TransactionView extends React.Component {
       const { approveTransaction } = this.props;
       const approve = await approveTransaction({
         transactionId: id,
-        status: true
+        status: false
       });
       if (approve) {
         getTransactions({
