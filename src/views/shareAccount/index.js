@@ -1,27 +1,28 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import ShareAccountView from './shareAccount';
-import NotSelectCompanyView from '../notSelectCompany';
-import {
-  Redirect,
-} from "react-router-dom";
+import React from "react";
+import { connect } from "react-redux";
+import ShareAccountView from "./shareAccount";
+import NotSelectCompanyView from "../notSelectCompany";
+import { Redirect } from "react-router-dom";
 
 class PreShareAccountView extends React.Component {
   render() {
     const { isAuth, selectedCompany } = this.props;
     if (isAuth) {
       if (!selectedCompany) {
-        return <NotSelectCompanyView />
+        return <NotSelectCompanyView />;
       }
-      return <ShareAccountView />
+      return <ShareAccountView />;
     }
-    return <Redirect to='/' />
+    return <Redirect to="/" />;
   }
 }
 
 const mapStateToProps = state => ({
   isAuth: state.user.isAuth,
-  selectedCompany: state.user.selectedCompany,
+  selectedCompany: state.user.selectedCompany
 });
 
-export default connect(mapStateToProps, null)(PreShareAccountView);
+export default connect(
+  mapStateToProps,
+  null
+)(PreShareAccountView);

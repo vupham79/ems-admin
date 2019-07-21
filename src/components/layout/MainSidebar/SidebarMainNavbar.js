@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Navbar, NavbarBrand } from "shards-react";
-import { connect } from 'react-redux';
-import FshopLogo from '../../../asset/fshop.png';
+import { connect } from "react-redux";
+import FshopLogo from "../../../asset/fshop.png";
 class SidebarMainNavbar extends React.Component {
   // constructor(props) {
   //   super(props);
@@ -21,16 +21,22 @@ class SidebarMainNavbar extends React.Component {
             href="#"
             style={{ lineHeight: "25px" }}
           >
-            <div className="m-auto" style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              className="m-auto"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <img
                 id="main-logo"
                 className="d-inline-block align-top mr-1"
                 style={{ maxWidth: "40px" }}
                 src={selectedCompany ? selectedCompany.ImageUrl : FshopLogo}
-                alt={''}
+                alt={""}
               />
               {!hideLogoText && (
-                <span className="d-none d-md-inline ml-1" style={{ verticalAlign: 'middle' }}>
+                <span
+                  className="d-none d-md-inline ml-1"
+                  style={{ verticalAlign: "middle" }}
+                >
                   {selectedCompany && selectedCompany.Name}
                 </span>
               )}
@@ -61,7 +67,10 @@ SidebarMainNavbar.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  selectedCompany: state.user.selectedCompany,
-})
+  selectedCompany: state.user.selectedCompany
+});
 
-export default connect(mapStateToProps, null)(SidebarMainNavbar);
+export default connect(
+  mapStateToProps,
+  null
+)(SidebarMainNavbar);

@@ -1,16 +1,14 @@
-import React from 'react';
+import React from "react";
 import { Container, Row, Col, Card, CardBody } from "shards-react";
-import { connect } from 'react-redux';
-import { Button, Modal } from 'react-bootstrap';
-import PageTitle from '../../components/pageTitle';
-import { getTransactions } from '../../action';
-import { bindActionCreators } from 'redux';
-import './style.css';
+import { connect } from "react-redux";
+import { Button, Modal } from "react-bootstrap";
+import PageTitle from "../../components/pageTitle";
+import { getTransactions } from "../../action";
+import { bindActionCreators } from "redux";
+import "./style.css";
 
 class TransactionEntryView extends React.Component {
-  state = {
-
-  }
+  state = {};
 
   componentDidMount() {
     // const { getTransactions } = this.props;
@@ -26,7 +24,9 @@ class TransactionEntryView extends React.Component {
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
           <PageTitle sm="4" title="Transactions" className="text-sm-left" />
-          <Button variant="info" size="sm" onClick={this.onAddToggle}>Add Transaction Entry</Button>
+          <Button variant="info" size="sm" onClick={this.onAddToggle}>
+            Add Transaction Entry
+          </Button>
         </Row>
 
         {/* Default Light Table */}
@@ -39,25 +39,23 @@ class TransactionEntryView extends React.Component {
                     <tr>
                       <th scope="col" className="border-0">
                         #
-                  </th>
+                      </th>
                       <th scope="col" className="border-0">
                         Resource
-                  </th>
+                      </th>
                       <th scope="col" className="border-0">
                         Target
-                  </th>
+                      </th>
                       <th scope="col" className="border-0">
                         Round
-                  </th>
+                      </th>
                       <th scope="col" className="border-0">
                         Type
-                  </th>
+                      </th>
                       <th scope="col" className="border-0">
                         Amount
-                  </th>
-                      <th scope="col" className="border-0">
-
                       </th>
+                      <th scope="col" className="border-0" />
                     </tr>
                   </thead>
                   <tbody>
@@ -79,8 +77,8 @@ class TransactionEntryView extends React.Component {
                         </tr>
                       )
                     })} */}
-                    <Modal show={this.state.isEdit} onHide={this.onEditToggle}>
-                      <Modal.Header closeButton onHide={this.onEditToggle}>
+                    <Modal show={this.state.isEdit}>
+                      <Modal.Header>
                         {/* <Modal.Title>Modal heading</Modal.Title> */}
                       </Modal.Header>
                       <Modal.Body>
@@ -108,10 +106,10 @@ class TransactionEntryView extends React.Component {
                       <Modal.Footer>
                         <Button variant="secondary" onClick={this.onEditToggle}>
                           Close
-                                </Button>
+                        </Button>
                         <Button variant="primary" onClick={this.onSave}>
                           Save Changes
-                                </Button>
+                        </Button>
                       </Modal.Footer>
                     </Modal>
                   </tbody>
@@ -121,24 +119,25 @@ class TransactionEntryView extends React.Component {
           </Col>
         </Row>
       </Container>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => {
   return {
     // transactions: state.company.Transactions,
-  }
+  };
 };
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    // getTransactions
-  },
-  dispatch,
-)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      // getTransactions
+    },
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(TransactionEntryView);

@@ -1,4 +1,4 @@
-export const API_URL = 'https://emsfpt.azurewebsites.net/api/';
+export const API_URL = "https://emsfpt.azurewebsites.net/api/";
 
 export const COMPANIES = "company";
 export const GET_COMPANY = "company/{id}";
@@ -13,6 +13,12 @@ export const GET_TRANSACTION_TYPE = "transactiontype/{id}";
 export const GET_ROUNDS = "round";
 export const GET_ROUND_TYPES = "RoundType";
 export const GET_TRANSACTION_ENTRIES = "transactionentry";
+export const REQUEST = "request";
+export const EMPLOYEE = "employee";
+export const INVESTOR = "investor";
+export const FUNDER = "funder";
+export const TRANSFER = "transfer";
+export const TAKE_BACK = "takeback";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyBM9cWasjSIxGDl3qCk5a972m26yyy7is4",

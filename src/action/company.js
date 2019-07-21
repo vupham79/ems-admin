@@ -1,109 +1,207 @@
-import fetchAPI from '../utils/service';
+import fetchAPI from "../utils/service";
 import {
   GET_COMPANIES_BY_USERNAME,
   GET_SHARE_ACCOUNT,
   GET_SHAREHOLDER,
   GET_ROUNDS,
   COMPANIES,
-  GET_TRANSACTION
-} from '../utils/constants';
+  GET_TRANSACTION,
+  REQUEST,
+  INVESTOR,
+  FUNDER,
+  EMPLOYEE,
+  TAKE_BACK,
+  TRANSFER
+} from "../utils/constants";
 
-export const TOAST = 'TOAST';
+export const TOAST_SHOW = "TOAST_SHOW";
 
-export const LOAD_COMPANY = 'LOAD_COMPANY';
-export const LOAD_COMPANY_SUCCESS = 'LOAD_COMPANY_SUCCESS';
-export const LOAD_COMPANY_FAIL = 'LOAD_COMPANY_FAIL';
+export const LOAD_COMPANY = "LOAD_COMPANY";
+export const LOAD_COMPANY_SUCCESS = "LOAD_COMPANY_SUCCESS";
+export const LOAD_COMPANY_FAIL = "LOAD_COMPANY_FAIL";
 
 export function getCompany(data) {
   return async function action(dispatch) {
     dispatch({
-      type: LOAD_COMPANY,
-    })
+      type: LOAD_COMPANY
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
+        method: "GET",
         params: { username: data.Username },
-        endpoints: GET_COMPANIES_BY_USERNAME,
+        endpoints: GET_COMPANIES_BY_USERNAME
       });
       if (res) {
         dispatch({
           type: LOAD_COMPANY_SUCCESS,
           data: res.data
-        })
+        });
       } else {
         dispatch({
           type: LOAD_COMPANY_FAIL
-        })
+        });
       }
     } catch (error) {
       dispatch({
         type: LOAD_COMPANY_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Company",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
     }
-  }
+  };
 }
 
-export const UPDATE_COMPANY = 'UPDATE_COMPANY';
-export const UPDATE_COMPANY_SUCCESS = 'UPDATE_COMPANY_SUCCESS';
-export const UPDATE_COMPANY_FAIL = 'UPDATE_COMPANY_FAIL';
+export const UPDATE_COMPANY = "UPDATE_COMPANY";
+export const UPDATE_COMPANY_SUCCESS = "UPDATE_COMPANY_SUCCESS";
+export const UPDATE_COMPANY_FAIL = "UPDATE_COMPANY_FAIL";
 
-export function updateCompany(company) {
+export function updateCompany(company, storage) {
   return async function action(dispatch) {
     dispatch({
-      type: UPDATE_COMPANY,
+      type: UPDATE_COMPANY
     });
     try {
-      const payload = {
-        Id: company.Id,
-        Name: company.Name,
-        Address: company.Address,
-        Phone: company.Phone,
-        EstablishedYear: company.EstablishedYear,
-        Email: company.Email,
-        AdminUsername: company.AdminUsername,
-        Longtitude: company.Longtitude,
-        Latitude: company.Latitude,
-        Balance: company.Balance,
-        IsActive: company.IsActive
-      };
-      const res = await fetchAPI({
-        method: 'PUT',
-        data: {
-          ...payload,
-        },
-        endpoints: 'Company/' + company.Id,
-      });
-      if (res) {
-        dispatch({
-          type: UPDATE_COMPANY_SUCCESS,
-        })
-        return true
+      if (company.blob) {
+        const task = storage.ref(`companies/${company.Id}`).put(company.blob);
+        task.on(
+          "state_changed",
+          () => {},
+          error => {
+            console.log(error);
+          },
+          () => {
+            task.snapshot.ref.getDownloadURL().then(async url => {
+              const payload = {
+                Id: company.Id,
+                Name: company.Name,
+                Address: company.Address,
+                Phone: company.Phone,
+                EstablishedYear: company.EstablishedYear,
+                Email: company.Email,
+                AdminUsername: company.AdminUsername,
+                Longtitude: company.Longtitude,
+                Latitude: company.Latitude,
+                ImageUrl: url,
+                IsActive: company.IsActive
+              };
+              const res = await fetchAPI({
+                method: "PUT",
+                data: {
+                  ...payload
+                },
+                endpoints: "Company/" + company.Id
+              });
+              if (res) {
+                dispatch({
+                  type: UPDATE_COMPANY_SUCCESS
+                });
+                dispatch({
+                  type: "TOAST_SHOW",
+                  payload: {
+                    header: "Company",
+                    body: "Update success",
+                    type: "success"
+                  }
+                });
+                return true;
+              } else {
+                dispatch({
+                  type: UPDATE_COMPANY_FAIL
+                });
+                dispatch({
+                  type: "TOAST_SHOW",
+                  payload: {
+                    header: "Company",
+                    body: "Update failed!",
+                    type: "fail"
+                  }
+                });
+                return false;
+              }
+            });
+          }
+        );
       } else {
-        dispatch({
-          type: UPDATE_COMPANY_FAIL,
-        })
-        return false
+        const payload = {
+          Id: company.Id,
+          Name: company.Name,
+          Address: company.Address,
+          Phone: company.Phone,
+          EstablishedYear: company.EstablishedYear,
+          Email: company.Email,
+          AdminUsername: company.AdminUsername,
+          Longtitude: company.Longtitude,
+          Latitude: company.Latitude,
+          ImageUrl: company.ImageUrl,
+          IsActive: company.IsActive
+        };
+        const res = await fetchAPI({
+          method: "PUT",
+          data: {
+            ...payload
+          },
+          endpoints: "Company/" + company.Id
+        });
+        if (res) {
+          dispatch({
+            type: UPDATE_COMPANY_SUCCESS
+          });
+          dispatch({
+            type: "TOAST_SHOW",
+            payload: {
+              header: "Company",
+              body: "Update success",
+              type: "success"
+            }
+          });
+          return true;
+        } else {
+          dispatch({
+            type: UPDATE_COMPANY_FAIL
+          });
+          dispatch({
+            type: "TOAST_SHOW",
+            payload: {
+              header: "Company",
+              body: "Update failed!",
+              type: "fail"
+            }
+          });
+          return false;
+        }
       }
     } catch (error) {
       dispatch({
-        type: UPDATE_COMPANY_FAIL,
+        type: UPDATE_COMPANY_FAIL
       });
-      console.log(error)
-      return false
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Company",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const ADD_COMPANY = 'ADD_COMPANY';
-export const ADD_COMPANY_SUCCESS = 'ADD_COMPANY_SUCCESS';
-export const ADD_COMPANY_FAIL = 'ADD_COMPANY_FAIL';
+export const ADD_COMPANY = "ADD_COMPANY";
+export const ADD_COMPANY_SUCCESS = "ADD_COMPANY_SUCCESS";
+export const ADD_COMPANY_FAIL = "ADD_COMPANY_FAIL";
 
-export function addCompany(company) {
+export function addCompany(company, storage) {
   return async function action(dispatch) {
     dispatch({
-      type: ADD_COMPANY,
-    })
+      type: ADD_COMPANY
+    });
     try {
       const payload = {
         Name: company.Name,
@@ -116,315 +214,646 @@ export function addCompany(company) {
         Latitude: company.Latitude,
         Balance: company.Balance,
         IsActive: true,
+        IsPublic: true
       };
       const res = await fetchAPI({
-        method: 'POST',
+        method: "POST",
         data: {
-          ...payload,
+          ...payload
         },
-        endpoints: COMPANIES,
+        endpoints: COMPANIES
       });
       if (res) {
-        dispatch({
-          type: ADD_COMPANY_SUCCESS,
-        })
-        dispatch({
-          type: TOAST,
-          payload: {
-            header: 'Add new Company',
-            body: 'Adding success'
+        // res.data.Id
+        const task = storage.ref(`companies/${res.data.Id}`).put(company.blob);
+        task.on(
+          "state_changed",
+          () => {},
+          error => {
+            console.log(error);
+          },
+          () => {
+            task.snapshot.ref.getDownloadURL().then(async url => {
+              const payload = {
+                Id: res.data.Id,
+                Name: company.Name,
+                Address: company.Address,
+                Phone: company.Phone,
+                EstablishedYear: company.EstablishedYear,
+                Email: company.Email,
+                AdminUsername: company.AdminUsername,
+                Longtitude: company.Longtitude,
+                Latitude: company.Latitude,
+                IsActive: true,
+                IsPublic: true,
+                ImageUrl: url
+              };
+              await fetchAPI({
+                method: "PUT",
+                data: {
+                  ...payload
+                },
+                endpoints: "Company/" + res.data.Id
+              });
+              dispatch({
+                type: ADD_COMPANY_SUCCESS
+              });
+              dispatch({
+                type: TOAST_SHOW,
+                payload: {
+                  header: "Company",
+                  body: "Adding success",
+                  type: "success"
+                }
+              });
+              return true;
+            });
           }
-        })
-        return true
+        );
       } else {
         dispatch({
-          type: ADD_COMPANY_FAIL,
-        })
-        return false
+          type: ADD_COMPANY_FAIL
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Company",
+            body: "Adding failed!",
+            type: "fail"
+          }
+        });
+        return false;
       }
     } catch (error) {
       dispatch({
-        type: ADD_COMPANY_FAIL,
+        type: ADD_COMPANY_FAIL
       });
-      console.log(error)
-      return false
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Company",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const SELECT_COMPANY = 'SELECT_COMPANY';
+export const SELECT_COMPANY = "SELECT_COMPANY";
 
 export function selectCompany(id) {
   return async function action(dispatch) {
     dispatch({
-      type: SELECT_COMPANY,
-    })
+      type: SELECT_COMPANY
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
-        endpoints: GET_COMPANIES_BY_USERNAME + '/' + id,
+        method: "GET",
+        endpoints: GET_COMPANIES_BY_USERNAME + "/" + id
       });
       if (res) {
         dispatch({
           type: LOAD_COMPANY_SUCCESS,
           data: res.data
-        })
+        });
       } else {
         dispatch({
           type: LOAD_COMPANY_FAIL
-        })
+        });
       }
     } catch (error) {
       dispatch({
         type: LOAD_COMPANY_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Company",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
     }
-  }
+  };
 }
 
-export const LOAD_SHAREHOLDERS = 'LOAD_SHAREHOLDERS';
-export const LOAD_SHAREHOLDERS_SUCCESS = 'LOAD_SHAREHOLDERS_SUCCESS';
-export const LOAD_SHAREHOLDERS_FAIL = 'LOAD_SHAREHOLDERS_FAIL';
+export const LOAD_SHAREHOLDERS = "LOAD_SHAREHOLDERS";
+export const LOAD_SHAREHOLDERS_SUCCESS = "LOAD_SHAREHOLDERS_SUCCESS";
+export const LOAD_SHAREHOLDERS_FAIL = "LOAD_SHAREHOLDERS_FAIL";
 
 export function getShareholders(data) {
   return async function action(dispatch) {
     dispatch({
-      type: LOAD_SHAREHOLDERS,
-    })
+      type: LOAD_SHAREHOLDERS
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
+        method: "GET",
         params: { companyId: data.id },
-        endpoints: GET_SHAREHOLDER,
+        endpoints: GET_SHAREHOLDER
       });
       if (res) {
         dispatch({
           type: LOAD_SHAREHOLDERS_SUCCESS,
           data: res.data
-        })
+        });
+        return true;
       } else {
         dispatch({
           type: LOAD_SHAREHOLDERS_FAIL
-        })
+        });
+        return false;
       }
     } catch (error) {
       dispatch({
         type: LOAD_SHAREHOLDERS_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Shareholder",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const ADD_SHAREHOLDERS = 'ADD_SHAREHOLDERS';
-export const ADD_SHAREHOLDERS_SUCCESS = 'ADD_SHAREHOLDERS_SUCCESS';
-export const ADD_SHAREHOLDERS_FAIL = 'ADD_SHAREHOLDERS_FAIL';
+export const ADD_SHAREHOLDERS = "ADD_SHAREHOLDERS";
+export const ADD_SHAREHOLDERS_SUCCESS = "ADD_SHAREHOLDERS_SUCCESS";
+export const ADD_SHAREHOLDERS_FAIL = "ADD_SHAREHOLDERS_FAIL";
 
-export function addShareholder(data) {
+export function addShareholder(shareholder, companyId) {
   return async function action(dispatch) {
     dispatch({
-      type: ADD_SHAREHOLDERS,
-    })
+      type: ADD_SHAREHOLDERS
+    });
     try {
       let valid = true;
       //Check if share holder is existed
       const res1 = await fetchAPI({
-        method: 'GET',
-        params: { companyId: data.companyId },
-        endpoints: GET_SHAREHOLDER,
+        method: "GET",
+        params: { companyId: companyId },
+        endpoints: GET_SHAREHOLDER
       });
       if (res1) {
         res1.data.forEach(entry => {
-          console.log(entry);
-          if (entry.Username === data.Username) {
+          if (entry.Username === shareholder.Username) {
             // Toast fail action
-            valid = false
+            valid = false;
           }
         });
       }
       //Add share holder
       if (valid) {
+        let endpoints = "";
+        switch (shareholder.ShareholderTypeId) {
+          case "1":
+            //Funder
+            endpoints = FUNDER;
+            break;
+          case "2":
+            //Investor
+            endpoints = INVESTOR;
+            break;
+          case "3":
+            //Employee
+            endpoints = EMPLOYEE;
+            break;
+          default:
+            break;
+        }
         const res = await fetchAPI({
-          method: 'POST',
+          method: "POST",
           params: {
-            companyId: data.Id,
-            amount: 0
+            username: shareholder.Username,
+            companyId: companyId,
+            amount: shareholder.balance
           },
-          data: {
-            Username: data.Username,
-            CompanyId: data.companyId,
-            ShareholderTypeId: data.ShareholderTypeId || 1,
-            IsPublic: data.IsPublic,
-            IsActive: true,
-          },
-          endpoints: GET_SHAREHOLDER,
+          endpoints: endpoints
         });
         if (res) {
           dispatch({
-            type: ADD_SHAREHOLDERS_SUCCESS,
-          })
-          return true
+            type: ADD_SHAREHOLDERS_SUCCESS
+          });
+          dispatch({
+            type: "TOAST_SHOW",
+            payload: {
+              header: "Shareholder",
+              body: "Adding success",
+              type: "success"
+            }
+          });
+          return true;
         } else {
           dispatch({
             type: ADD_SHAREHOLDERS_FAIL
-          })
-          return false
+          });
+          dispatch({
+            type: "TOAST_SHOW",
+            payload: {
+              header: "Shareholder",
+              body: "Adding failed!",
+              type: "fail"
+            }
+          });
+          return false;
         }
       }
     } catch (error) {
       dispatch({
         type: ADD_SHAREHOLDERS_FAIL
       });
-      console.log(error.message)
-      return false
+      dispatch({
+        type: "TOAST_SHOW",
+        payload: {
+          header: "Shareholder",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const UPDATE_SHAREHOLDERS = 'UPDATE_SHAREHOLDERS';
-export const UPDATE_SHAREHOLDERS_SUCCESS = 'UPDATE_SHAREHOLDERS_SUCCESS';
-export const UPDATE_SHAREHOLDERS_FAIL = 'UPDATE_SHAREHOLDERS_FAIL';
+export const UPDATE_SHAREHOLDERS = "UPDATE_SHAREHOLDERS";
+export const UPDATE_SHAREHOLDERS_SUCCESS = "UPDATE_SHAREHOLDERS_SUCCESS";
+export const UPDATE_SHAREHOLDERS_FAIL = "UPDATE_SHAREHOLDERS_FAIL";
 
-export function updateShareholder(data) {
+export function updateShareholder(shareholder, companyId) {
   return async function action(dispatch) {
     dispatch({
-      type: UPDATE_SHAREHOLDERS,
-    })
+      type: UPDATE_SHAREHOLDERS
+    });
     try {
       //Update share holder
       const res = await fetchAPI({
-        method: 'PUT',
-        // params: { id: data.Id },
+        method: "PUT",
         data: {
-          Id: data.Id,
-          Username: data.Username,
-          CompanyId: data.CompanyId,
-          ShareholderTypeId: data.ShareholderTypeId,
-          IsActive: data.IsActive,
-          IsPublic: data.IsPublic,
+          Id: shareholder.Id,
+          Username: shareholder.Username,
+          CompanyId: companyId,
+          ShareholderTypeId: shareholder.ShareholderTypeId,
+          IsActive: shareholder.IsActive,
+          IsPublic: shareholder.IsPublic
         },
-        endpoints: `${GET_SHAREHOLDER}/${data.Id}`,
+        endpoints: `${GET_SHAREHOLDER}/${shareholder.Id}`
       });
       if (res) {
         dispatch({
-          type: UPDATE_SHAREHOLDERS_SUCCESS,
-        })
-        return true
+          type: UPDATE_SHAREHOLDERS_SUCCESS
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Shareholder",
+            body: "Update success",
+            type: "success"
+          }
+        });
+        return true;
       } else {
         dispatch({
           type: UPDATE_SHAREHOLDERS_FAIL
-        })
-        return false
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Shareholder",
+            body: "Update failed!",
+            type: "fail"
+          }
+        });
+        return false;
       }
     } catch (error) {
       dispatch({
         type: UPDATE_SHAREHOLDERS_FAIL
       });
-      console.log(error.message)
-      return false
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Shareholder",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const LOAD_SHAREACCOUNTS = 'LOAD_SHAREACCOUNTS';
-export const LOAD_SHAREACCOUNTS_SUCCESS = 'LOAD_SHAREACCOUNTS_SUCCESS';
-export const LOAD_SHAREACCOUNTS_FAIL = 'LOAD_SHAREACCOUNTS_FAIL';
+export const LOAD_SHAREACCOUNTS = "LOAD_SHAREACCOUNTS";
+export const LOAD_SHAREACCOUNTS_SUCCESS = "LOAD_SHAREACCOUNTS_SUCCESS";
+export const LOAD_SHAREACCOUNTS_FAIL = "LOAD_SHAREACCOUNTS_FAIL";
 
 export function getShareAccounts(data) {
   return async function action(dispatch) {
     dispatch({
-      type: LOAD_SHAREACCOUNTS,
-    })
+      type: LOAD_SHAREACCOUNTS
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
+        method: "GET",
         params: { companyId: data.id },
-        endpoints: GET_SHARE_ACCOUNT,
+        endpoints: GET_SHARE_ACCOUNT
       });
       if (res) {
         dispatch({
           type: LOAD_SHAREACCOUNTS_SUCCESS,
           data: res.data
-        })
+        });
       } else {
         dispatch({
           type: LOAD_SHAREACCOUNTS_FAIL
-        })
+        });
       }
     } catch (error) {
       dispatch({
         type: LOAD_SHAREACCOUNTS_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Share accounts",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
     }
-  }
+  };
 }
 
-export const LOAD_ROUNDS = 'LOAD_ROUNDS';
-export const LOAD_ROUNDS_SUCCESS = 'LOAD_ROUNDS_SUCCESS';
-export const LOAD_ROUNDS_FAIL = 'LOAD_ROUNDS_FAIL';
+export const LOAD_ROUNDS = "LOAD_ROUNDS";
+export const LOAD_ROUNDS_SUCCESS = "LOAD_ROUNDS_SUCCESS";
+export const LOAD_ROUNDS_FAIL = "LOAD_ROUNDS_FAIL";
 
 export function getRounds(data) {
   return async function action(dispatch) {
     dispatch({
-      type: LOAD_ROUNDS,
-    })
+      type: LOAD_ROUNDS
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
+        method: "GET",
         params: { companyId: data.id },
-        endpoints: GET_ROUNDS,
+        endpoints: GET_ROUNDS
       });
       if (res) {
         dispatch({
           type: LOAD_ROUNDS_SUCCESS,
           data: res.data
-        })
+        });
       } else {
         dispatch({
           type: LOAD_ROUNDS_FAIL
-        })
+        });
       }
     } catch (error) {
       dispatch({
         type: LOAD_ROUNDS_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Rounds",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
     }
-  }
+  };
 }
 
-export const LOAD_TRANSACTIONS = 'LOAD_TRANSACTIONS';
-export const LOAD_TRANSACTIONS_SUCCESS = 'LOAD_TRANSACTIONS_SUCCESS';
-export const LOAD_TRANSACTIONS_FAIL = 'LOAD_TRANSACTIONS_FAIL';
+export const LOAD_TRANSACTIONS = "LOAD_TRANSACTIONS";
+export const LOAD_TRANSACTIONS_SUCCESS = "LOAD_TRANSACTIONS_SUCCESS";
+export const LOAD_TRANSACTIONS_FAIL = "LOAD_TRANSACTIONS_FAIL";
 
 export function getTransactions(data) {
   return async function action(dispatch) {
     dispatch({
-      type: LOAD_TRANSACTIONS,
-    })
+      type: LOAD_TRANSACTIONS
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
+        method: "GET",
         params: { companyId: data.id },
-        endpoints: GET_TRANSACTION,
+        endpoints: GET_TRANSACTION
       });
       if (res) {
         dispatch({
           type: LOAD_TRANSACTIONS_SUCCESS,
           data: res.data
-        })
+        });
       } else {
         dispatch({
           type: LOAD_TRANSACTIONS_FAIL
-        })
+        });
       }
     } catch (error) {
       dispatch({
         type: LOAD_TRANSACTIONS_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Transaction",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
     }
-  }
+  };
+}
+
+export const APPROVE_TRANSACTION = "APPROVE_TRANSACTION";
+export const APPROVE_TRANSACTION_SUCCESS = "APPROVE_TRANSACTION_SUCCESS";
+export const APPROVE_TRANSACTION_FAIL = "APPROVE_TRANSACTION_FAIL";
+
+export function approveTransaction(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: APPROVE_TRANSACTION
+    });
+    try {
+      const res = await fetchAPI({
+        method: "PUT",
+        params: {
+          transactionId: data.transactionId,
+          status: data.status
+        },
+        endpoints: REQUEST
+      });
+      if (res) {
+        dispatch({
+          type: APPROVE_TRANSACTION_SUCCESS
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Transaction",
+            body: "Approve success!",
+            type: "success"
+          }
+        });
+        return true;
+      } else {
+        dispatch({
+          type: APPROVE_TRANSACTION_FAIL
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Transaction",
+            body: "Approve failed!",
+            type: "fail"
+          }
+        });
+        return false;
+      }
+    } catch (error) {
+      dispatch({
+        type: APPROVE_TRANSACTION_FAIL
+      });
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Transaction",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
+    }
+  };
+}
+
+export const TRANSFER_SHARE = "TRANSFER_SHARE";
+export const TRANSFER_SHARE_SUCCESS = "TRANSFER_SHARE_SUCCESS";
+export const TRANSFER_SHARE_FAIL = "TRANSFER_SHARE_FAIL";
+
+export function transferShare(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: TRANSFER_SHARE
+    });
+    try {
+      const res = await fetchAPI({
+        method: "POST",
+        params: {
+          shareAccountId: data.resource,
+          username: data.destination,
+          amount: parseInt(data.amount)
+        },
+        endpoints: TRANSFER
+      }).catch(e => console.log("res: ", e));
+      if (res) {
+        dispatch({
+          type: TRANSFER_SHARE_SUCCESS
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Transfer",
+            body: "Transfer success",
+            type: "success"
+          }
+        });
+        return true;
+      } else {
+        dispatch({
+          type: TRANSFER_SHARE_FAIL
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Transfer",
+            body: "Transfer failed",
+            type: "fail"
+          }
+        });
+        return false;
+      }
+    } catch (error) {
+      dispatch({
+        type: TRANSFER_SHARE_FAIL
+      });
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Transfer",
+          body: `${error.Message} 2222`,
+          type: "fail"
+        }
+      });
+      return false;
+    }
+  };
+}
+
+export const TAKE_BACK_SHARE = "TAKE_BACK_SHARE";
+export const TAKE_BACK_SHARE_SUCCESS = "TAKE_BACK_SHARE_SUCCESS";
+export const TAKE_BACK_SHARE_FAIL = "TAKE_BACK_SHARE_FAIL";
+
+export function takeBackShare(data) {
+  return async function action(dispatch) {
+    dispatch({
+      type: TAKE_BACK_SHARE
+    });
+    try {
+      const res = await fetchAPI({
+        method: "POST",
+        params: {
+          shareAccountId: data.resource,
+          amount: data.amount
+        },
+        endpoints: TAKE_BACK
+      });
+      if (res) {
+        dispatch({
+          type: TAKE_BACK_SHARE_SUCCESS
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Take Back",
+            body: "Take back success",
+            type: "success"
+          }
+        });
+        return true;
+      } else {
+        dispatch({
+          type: TAKE_BACK_SHARE_FAIL
+        });
+        dispatch({
+          type: TOAST_SHOW,
+          payload: {
+            header: "Take Back",
+            body: "Take back failed!",
+            type: "fail"
+          }
+        });
+        return false;
+      }
+    } catch (error) {
+      dispatch({
+        type: TAKE_BACK_SHARE_FAIL
+      });
+      dispatch({
+        type: TOAST_SHOW,
+        payload: {
+          header: "Take Back",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
+    }
+  };
 }

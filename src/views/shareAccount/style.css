@@ -5,10 +5,14 @@
 }
 
 .page-header {
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .btnGroup {
   display: flex;
   justify-content: flex-end;
+}
+
+ul {
+  padding-left: 0px;
 }

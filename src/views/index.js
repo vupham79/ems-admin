@@ -1,13 +1,14 @@
-import LoginView from './login/login';
-import ShareTypesView from './shareType';
-import ShareholdersView from './shareholder';
-import TransactionsView from './transaction';
-import UserView from './user';
-import RoundView from './round';
-import CompanyView from './company';
-import TransactionEntryView from './transactionEntry';
-import ShareAccountView from './shareAccount';
-import NotFoundView from './NotFound/NotFound';
+import LoginView from "./login/login";
+import ShareTypesView from "./shareType";
+import ShareholdersView from "./shareholder";
+import TransactionsView from "./transaction";
+import UserView from "./user";
+import RoundView from "./round";
+import CompanyView from "./company";
+import TransactionEntryView from "./transactionEntry";
+import ShareAccountView from "./shareAccount";
+import StatisticView from "./statistic";
+import NotFoundView from "./NotFound/NotFound";
 
 const View = {
   LoginView,
@@ -19,7 +20,8 @@ const View = {
   CompanyView,
   TransactionEntryView,
   ShareAccountView,
-  NotFoundView,
-}
+  StatisticView,
+  NotFoundView
+};
 
 export default View;

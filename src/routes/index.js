@@ -1,60 +1,57 @@
 // Default Layout
-import DefaultLayout from '../layout';
+import DefaultLayout from "../layout";
 
 // Route Views
-import View from '../views';
+import View from "../views";
 
 const routes = [
   {
     path: "/",
     exact: true,
-    component: View.LoginView,
+    component: View.LoginView
   },
   {
     path: "/shareholder",
     layout: DefaultLayout,
-    component: View.ShareholdersView,
+    component: View.ShareholdersView
   },
   {
     path: "/shareType",
     layout: DefaultLayout,
-    component: View.ShareTypesView,
+    component: View.ShareTypesView
   },
   {
     path: "/shareAccount",
     layout: DefaultLayout,
-    component: View.ShareAccountView,
+    component: View.ShareAccountView
   },
   {
     path: "/transaction",
     layout: DefaultLayout,
-    component: View.TransactionsView,
+    component: View.TransactionsView
   },
   {
     path: "/user",
     layout: DefaultLayout,
-    component: View.UserView,
+    component: View.UserView
   },
   {
     path: "/company",
     layout: DefaultLayout,
-    component: View.CompanyView,
+    component: View.CompanyView
   },
   {
     path: "/round",
     layout: DefaultLayout,
-    component: View.RoundView,
+    component: View.RoundView
   },
-  // {
-  //   path: "/transactionEntry",
-  //   layout: DefaultLayout,
-  //   component: View.TransactionEntryView,
-  // },
+  {
+    path: "/statistic",
+    layout: DefaultLayout,
+    component: View.StatisticView
+  }
 ];
 
 const NotFoundPage = View.NotFoundView;
 
-export {
-  routes,
-  NotFoundPage
-}
+export { routes, NotFoundPage };

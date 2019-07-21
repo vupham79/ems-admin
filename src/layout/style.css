@@ -3,3 +3,7 @@
   top: 50%;
   left: 50%;
 }
+
+.main-sidebar {
+  z-index: 1040 !important;
+}

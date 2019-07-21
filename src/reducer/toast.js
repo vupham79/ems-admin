@@ -1,26 +1,29 @@
-import { TOAST, TOAST_CLOSE } from '../action';
+import { TOAST_SHOW, TOAST_CLOSE } from "../action";
 
 const INITIAL_STATE = {
-  header: '',
-  body: '',
-  isShown: false,
-}
+  header: "",
+  body: "",
+  type: "",
+  show: false
+};
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case TOAST:
+    case TOAST_SHOW:
       return {
         header: action.payload.header,
-        body: action.payload.header,
-        isShown: true,
+        body: action.payload.body,
+        type: action.payload.type,
+        show: true
       };
     case TOAST_CLOSE:
       return {
-        header: '',
-        body: '',
-        isShown: false,
+        header: "",
+        body: "",
+        type: "",
+        show: false
       };
     default:
       return state;
   }
-}
+};

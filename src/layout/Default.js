@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Col } from "shards-react";
-import { Spinner } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { Spinner } from "react-bootstrap";
+import { connect } from "react-redux";
 import MainNavbar from "../components/layout/MainNavbar/MainNavbar";
 import MainSidebar from "../components/layout/MainSidebar/MainSidebar";
 import MainFooter from "../components/layout/MainFooter";
-import './style.css';
+import "./style.css";
 
 class DefaultLayout extends React.Component {
   render() {
@@ -18,12 +18,22 @@ class DefaultLayout extends React.Component {
       loadShareholder,
       loadShareType,
       loadTransaction,
-      loadTransactionEntry } = this.props;
+      loadTransactionEntry
+    } = this.props;
     const { signOut } = this.props;
     const { children, noNavbar, noFooter } = this.props;
     let loading = false;
 
-    if (loadCompany || loadRound || loadShareAccount || loadUser || loadShareholder || loadShareType || loadTransaction || loadTransactionEntry) {
+    if (
+      loadCompany ||
+      loadRound ||
+      loadShareAccount ||
+      loadUser ||
+      loadShareholder ||
+      loadShareType ||
+      loadTransaction ||
+      loadTransactionEntry
+    ) {
       loading = true;
     } else {
       loading = false;
@@ -41,7 +51,12 @@ class DefaultLayout extends React.Component {
             tag="main"
           >
             {!noNavbar && <MainNavbar signOut={signOut} />}
-            <Spinner animation="border" role="status" className={'spinner'} style={{ display: !loading ? 'none' : 'inline-table' }}>
+            <Spinner
+              animation="border"
+              role="status"
+              className={"spinner"}
+              style={{ display: !loading ? "none" : "inline-table" }}
+            >
               <span className="sr-only">Loading...</span>
             </Spinner>
             {children}
@@ -49,9 +64,9 @@ class DefaultLayout extends React.Component {
           </Col>
         </Row>
       </Container>
-    )
+    );
   }
-};
+}
 
 DefaultLayout.propTypes = {
   /**
@@ -77,10 +92,10 @@ const mapStateToProps = state => ({
   loadShareholder: state.shareholder.isLoading,
   loadShareType: state.shareType.isLoading,
   loadTransaction: state.transaction.isLoading,
-  loadTransactionEntry: state.transactionEntry.isLoading,
+  loadTransactionEntry: state.transactionEntry.isLoading
 });
 
 export default connect(
   mapStateToProps,
-  null,
+  null
 )(DefaultLayout);

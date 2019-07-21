@@ -1,20 +1,18 @@
-import fetchAPI from '../utils/service';
-import {
-  GET_SHARE_TYPE,
-} from '../utils/constants';
+import fetchAPI from "../utils/service";
+import { GET_SHARE_TYPE } from "../utils/constants";
 
-export const LOAD_SHARE_TYPES = 'LOAD_SHARE_TYPES';
-export const LOAD_SHARE_TYPES_SUCCESS = 'LOAD_SHARE_TYPES_SUCCESS';
-export const LOAD_SHARE_TYPES_FAIL = 'LOAD_SHARE_TYPES_FAIL';
+export const LOAD_SHARE_TYPES = "LOAD_SHARE_TYPES";
+export const LOAD_SHARE_TYPES_SUCCESS = "LOAD_SHARE_TYPES_SUCCESS";
+export const LOAD_SHARE_TYPES_FAIL = "LOAD_SHARE_TYPES_FAIL";
 
 export function getShareTypes(data) {
   return async function action(dispatch) {
     dispatch({
-      type: LOAD_SHARE_TYPES,
-    })
+      type: LOAD_SHARE_TYPES
+    });
     try {
       const res = await fetchAPI({
-        method: 'GET',
+        method: "GET",
         endpoints: GET_SHARE_TYPE,
         params: {
           companyId: data.id
@@ -24,131 +22,207 @@ export function getShareTypes(data) {
         dispatch({
           type: LOAD_SHARE_TYPES_SUCCESS,
           data: res.data
-        })
+        });
       } else {
         dispatch({
           type: LOAD_SHARE_TYPES_FAIL
-        })
+        });
       }
     } catch (error) {
       dispatch({
         type: LOAD_SHARE_TYPES_FAIL
       });
-      console.log(error.message)
+      dispatch({
+        type: "TOAST_SHOW",
+        payload: {
+          header: "Share Types",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
     }
-  }
+  };
 }
 
-export const UPDATE_SHARE_TYPE = 'UPDATE_SHARE_TYPE';
-export const UPDATE_SHARE_TYPE_SUCCESS = 'UPDATE_SHARE_TYPE_SUCCESS';
-export const UPDATE_SHARE_TYPE_FAIL = 'UPDATE_SHARE_TYPE_FAIL';
+export const UPDATE_SHARE_TYPE = "UPDATE_SHARE_TYPE";
+export const UPDATE_SHARE_TYPE_SUCCESS = "UPDATE_SHARE_TYPE_SUCCESS";
+export const UPDATE_SHARE_TYPE_FAIL = "UPDATE_SHARE_TYPE_FAIL";
 
 export function updateShareType(data) {
   return async function action(dispatch) {
     dispatch({
-      type: UPDATE_SHARE_TYPE,
-    })
+      type: UPDATE_SHARE_TYPE
+    });
     try {
       const res = await fetchAPI({
-        method: 'PUT',
+        method: "PUT",
         endpoints: `${GET_SHARE_TYPE}/${data.Id}`,
         data: {
           Id: data.Id,
           CompanyId: data.CompanyId,
-          Name: data.Name,
+          Name: data.Name
         }
       });
       if (res) {
         dispatch({
-          type: UPDATE_SHARE_TYPE_SUCCESS,
-        })
-        return true
+          type: UPDATE_SHARE_TYPE_SUCCESS
+        });
+        dispatch({
+          type: "TOAST_SHOW",
+          payload: {
+            header: "Share Type",
+            body: "Updating success",
+            type: "success"
+          }
+        });
+        return true;
       } else {
         dispatch({
           type: UPDATE_SHARE_TYPE_FAIL
-        })
-        return false
+        });
+        dispatch({
+          type: "TOAST_SHOW",
+          payload: {
+            header: "Share Type",
+            body: "Updating failed!",
+            type: "fail"
+          }
+        });
+        return false;
       }
     } catch (error) {
       dispatch({
         type: UPDATE_SHARE_TYPE_FAIL
       });
-      console.log(error.message)
-      return false
+      dispatch({
+        type: "TOAST_SHOW",
+        payload: {
+          header: "Share Type",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const ADD_SHARE_TYPE = 'ADD_SHARE_TYPE';
-export const ADD_SHARE_TYPE_SUCCESS = 'ADD_SHARE_TYPE_SUCCESS';
-export const ADD_SHARE_TYPE_FAIL = 'ADD_SHARE_TYPE_FAIL';
+export const ADD_SHARE_TYPE = "ADD_SHARE_TYPE";
+export const ADD_SHARE_TYPE_SUCCESS = "ADD_SHARE_TYPE_SUCCESS";
+export const ADD_SHARE_TYPE_FAIL = "ADD_SHARE_TYPE_FAIL";
 
 export function addShareType(data) {
   return async function action(dispatch) {
     dispatch({
-      type: ADD_SHARE_TYPE,
-    })
+      type: ADD_SHARE_TYPE
+    });
     try {
       const res = await fetchAPI({
-        method: 'POST',
+        method: "POST",
         endpoints: GET_SHARE_TYPE,
         data: {
           CompanyId: data.CompanyId,
-          Name: data.Name,
+          Name: data.Name
         }
       });
       if (res) {
         dispatch({
-          type: ADD_SHARE_TYPE_SUCCESS,
-        })
-        return true
+          type: ADD_SHARE_TYPE_SUCCESS
+        });
+        dispatch({
+          type: "TOAST_SHOW",
+          payload: {
+            header: "Share Type",
+            body: "Adding success",
+            type: "success"
+          }
+        });
+        return true;
       } else {
         dispatch({
           type: ADD_SHARE_TYPE_FAIL
-        })
-        return false
+        });
+        dispatch({
+          type: "TOAST_SHOW",
+          payload: {
+            header: "Share Type",
+            body: "Adding failed!",
+            type: "fail"
+          }
+        });
+        return false;
       }
     } catch (error) {
       dispatch({
         type: ADD_SHARE_TYPE_FAIL
       });
-      console.log(error.message)
-      return false
+      dispatch({
+        type: "TOAST_SHOW",
+        payload: {
+          header: "Share Type",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }
 
-export const REMOVE_SHARE_TYPE = 'REMOVE_SHARE_TYPE';
-export const REMOVE_SHARE_TYPE_SUCCESS = 'REMOVE_SHARE_TYPE_SUCCESS';
-export const REMOVE_SHARE_TYPE_FAIL = 'REMOVE_SHARE_TYPE_FAIL';
+export const REMOVE_SHARE_TYPE = "REMOVE_SHARE_TYPE";
+export const REMOVE_SHARE_TYPE_SUCCESS = "REMOVE_SHARE_TYPE_SUCCESS";
+export const REMOVE_SHARE_TYPE_FAIL = "REMOVE_SHARE_TYPE_FAIL";
 
 export function removeShareType(data) {
   return async function action(dispatch) {
     dispatch({
-      type: REMOVE_SHARE_TYPE,
-    })
+      type: REMOVE_SHARE_TYPE
+    });
     try {
       const res = await fetchAPI({
-        method: 'DELETE',
-        endpoints: `${GET_SHARE_TYPE}/${data.Id}`,
+        method: "DELETE",
+        endpoints: `${GET_SHARE_TYPE}/${data.Id}`
       });
       if (res) {
         dispatch({
-          type: REMOVE_SHARE_TYPE_SUCCESS,
-        })
-        return true
+          type: REMOVE_SHARE_TYPE_SUCCESS
+        });
+        dispatch({
+          type: "TOAST_SHOW",
+          payload: {
+            header: "Share Type",
+            body: "Deleting success",
+            type: "success"
+          }
+        });
+        return true;
       } else {
         dispatch({
           type: REMOVE_SHARE_TYPE_FAIL
-        })
-        return false
+        });
+        dispatch({
+          type: "TOAST_SHOW",
+          payload: {
+            header: "Share Type",
+            body: "Deleting failed!",
+            type: "fail"
+          }
+        });
+        return false;
       }
     } catch (error) {
       dispatch({
         type: REMOVE_SHARE_TYPE_FAIL
       });
-      console.log(error.message)
-      return false
+      dispatch({
+        type: "TOAST_SHOW",
+        payload: {
+          header: "Share Type",
+          body: `${error.message}`,
+          type: "fail"
+        }
+      });
+      return false;
     }
-  }
+  };
 }

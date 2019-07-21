@@ -17,35 +17,38 @@ import {
   LOAD_SHARE_TYPES,
   LOAD_SHARE_TYPES_SUCCESS,
   LOAD_SHARE_TYPES_FAIL,
-} from '../action';
+  UPLOAD_COMPANY_LOGO_REQUEST,
+  UPLOAD_COMPANY_LOGO_SUCCESS,
+  UPLOAD_COMPANY_LOGO_FAIL
+} from "../action";
 
 const INITIAL_STATE = {
-  Id: '',
-  Name: '',
-  Address: '',
-  Phone: '',
-  EstablishedYear: '',
-  Email: '',
-  Balance: '',
-  AdminUsername: '',
-  ImageUrl: '',
-  Latitude: '',
-  Longtitude: '',
+  Id: "",
+  Name: "",
+  Address: "",
+  Phone: "",
+  EstablishedYear: "",
+  Email: "",
+  Balance: "",
+  AdminUsername: "",
+  ImageUrl: "",
+  Latitude: "",
+  Longtitude: "",
   Shareholders: null,
   ShareAccounts: null,
   Rounds: null,
   Transactions: null,
   TransactionEntries: null,
   ShareTypes: null,
-  isLoading: false,
-}
+  isLoading: false
+};
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case LOAD_COMPANY:
       return {
         ...state,
-        isLoading: true,
+        isLoading: true
       };
     case LOAD_COMPANY_SUCCESS:
       return {
@@ -61,99 +64,99 @@ export default (state = INITIAL_STATE, action) => {
         Balance: action.data.Balance,
         Longtitude: action.data.Longtitude,
         Latitude: action.data.Latitude,
-        isLoading: false,
+        isLoading: false
       };
     case LOAD_COMPANY_FAIL:
       return {
         ...INITIAL_STATE,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_SHAREHOLDERS:
       return {
         ...state,
-        isLoading: true,
-      }
+        isLoading: true
+      };
     case LOAD_SHAREHOLDERS_SUCCESS:
       return {
         ...state,
         Shareholders: action.data,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_SHAREHOLDERS_FAIL:
       return {
         ...state,
         Shareholders: null,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_SHAREACCOUNTS:
       return {
         ...state,
-        isLoading: true,
-      }
+        isLoading: true
+      };
     case LOAD_SHAREACCOUNTS_SUCCESS:
       return {
         ...state,
         ShareAccounts: action.data,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_SHAREACCOUNTS_FAIL:
       return {
         ...state,
         ShareAccounts: null,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_ROUNDS:
       return {
         ...state,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_ROUNDS_SUCCESS:
       return {
         ...state,
         Rounds: action.data,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_ROUNDS_FAIL:
       return {
         ...state,
         Rounds: null,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_TRANSACTIONS:
       return {
         ...state,
-        isLoading: true,
-      }
+        isLoading: true
+      };
     case LOAD_TRANSACTIONS_SUCCESS:
       return {
         ...state,
         Transactions: action.data,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_TRANSACTIONS_FAIL:
       return {
         ...state,
         Transactions: null,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_SHARE_TYPES:
       return {
         ...state,
-        isLoading: true,
-      }
+        isLoading: true
+      };
     case LOAD_SHARE_TYPES_SUCCESS:
       return {
         ...state,
         ShareTypes: action.data,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     case LOAD_SHARE_TYPES_FAIL:
       return {
         ...state,
         ShareTypes: null,
-        isLoading: false,
-      }
+        isLoading: false
+      };
     default:
       return state;
   }
-}
+};
