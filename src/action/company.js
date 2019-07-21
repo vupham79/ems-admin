@@ -213,6 +213,8 @@ export function addCompany(company, storage) {
         Longtitude: company.Longtitude,
         Latitude: company.Latitude,
         Balance: company.Balance,
+        ImageUrl:
+          "https://storage.googleapis.com/emsandroid-db602.appspot.com/companies/logo_notfound.png",
         IsActive: true,
         IsPublic: true
       };
@@ -225,51 +227,83 @@ export function addCompany(company, storage) {
       });
       if (res) {
         // res.data.Id
-        const task = storage.ref(`companies/${res.data.Id}`).put(company.blob);
-        task.on(
-          "state_changed",
-          () => {},
-          error => {
-            console.log(error);
-          },
-          () => {
-            task.snapshot.ref.getDownloadURL().then(async url => {
-              const payload = {
-                Id: res.data.Id,
-                Name: company.Name,
-                Address: company.Address,
-                Phone: company.Phone,
-                EstablishedYear: company.EstablishedYear,
-                Email: company.Email,
-                AdminUsername: company.AdminUsername,
-                Longtitude: company.Longtitude,
-                Latitude: company.Latitude,
-                IsActive: true,
-                IsPublic: true,
-                ImageUrl: url
-              };
-              await fetchAPI({
-                method: "PUT",
-                data: {
-                  ...payload
-                },
-                endpoints: "Company/" + res.data.Id
-              });
-              dispatch({
-                type: ADD_COMPANY_SUCCESS
-              });
-              dispatch({
-                type: TOAST_SHOW,
-                payload: {
-                  header: "Company",
-                  body: "Adding success",
-                  type: "success"
+        if (company.blob) {
+          const task = storage
+            .ref(`companies/${res.data.Id}`)
+            .put(company.blob);
+          task.on(
+            "state_changed",
+            () => {},
+            error => {
+              console.log(error);
+            },
+            () => {
+              task.snapshot.ref.getDownloadURL().then(async url => {
+                const payload = {
+                  Id: res.data.Id,
+                  Name: company.Name,
+                  Address: company.Address,
+                  Phone: company.Phone,
+                  EstablishedYear: company.EstablishedYear,
+                  Email: company.Email,
+                  AdminUsername: company.AdminUsername,
+                  Longtitude: company.Longtitude,
+                  Latitude: company.Latitude,
+                  IsActive: true,
+                  IsPublic: true,
+                  ImageUrl: url
+                };
+                const update = await fetchAPI({
+                  method: "PUT",
+                  data: {
+                    ...payload
+                  },
+                  endpoints: "Company/" + res.data.Id
+                });
+                if (update) {
+                  dispatch({
+                    type: ADD_COMPANY_SUCCESS
+                  });
+                  dispatch({
+                    type: TOAST_SHOW,
+                    payload: {
+                      header: "Company",
+                      body: "Adding success",
+                      type: "success"
+                    }
+                  });
+                  return true;
+                } else {
+                  dispatch({
+                    type: ADD_COMPANY_FAIL
+                  });
+                  dispatch({
+                    type: TOAST_SHOW,
+                    payload: {
+                      header: "Company",
+                      body: "Adding failed!",
+                      type: "fail"
+                    }
+                  });
+                  return false;
                 }
               });
-              return true;
-            });
-          }
-        );
+            }
+          );
+        } else {
+          dispatch({
+            type: ADD_COMPANY_SUCCESS
+          });
+          dispatch({
+            type: TOAST_SHOW,
+            payload: {
+              header: "Company",
+              body: "Adding success",
+              type: "success"
+            }
+          });
+          return true;
+        }
       } else {
         dispatch({
           type: ADD_COMPANY_FAIL

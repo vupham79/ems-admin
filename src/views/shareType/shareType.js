@@ -246,7 +246,6 @@ class ShareholdersView extends React.Component {
                       <th scope="col" className="border-0">
                         Name
                       </th>
-                      <th scope="col" className="border-0" />
                     </tr>
                   </thead>
                   <tbody>

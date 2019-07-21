@@ -166,9 +166,124 @@ class RoundView extends React.Component {
     this.onAddToggle();
   };
 
-  render() {
-    const { filterRounds, round, newRound } = this.state;
+  renderAddModal = () => {
+    const { newRound, isAdd, filterRounds } = this.state;
+
+    return (
+      <Modal show={isAdd}>
+        <Modal.Header>
+          <Modal.Title>Add Round</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {filterRounds.length > 0 ? (
+            <React.Fragment>
+              <div className="modalDiv">
+                <p>Pre-money</p>
+                <input
+                  className={"input50"}
+                  name={"PreMoney"}
+                  onChange={this.onChangeNewRound}
+                  value={newRound.PreMoney}
+                />
+              </div>
+              <div className="modalDiv">
+                <p>Option Pool</p>
+                <input
+                  className={"input50"}
+                  name={"OptionPool"}
+                  onChange={this.onChangeNewRound}
+                  value={newRound.OptionPool}
+                />
+              </div>
+            </React.Fragment>
+          ) : (
+            <div className="modalDiv">
+              <p>Do you want to create Funding round?</p>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.onAddToggle}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={this.onAdd}>
+            Add
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  renderEditModal = () => {
+    const { round } = this.state;
     const { roundTypes } = this.props;
+    return (
+      <Modal show={this.state.isEdit}>
+        <Modal.Header>
+          <Modal.Title>Id: {round.Id}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="modalDiv">
+            <p>Round Type</p>
+            <Form.Control
+              className={"input50"}
+              as="select"
+              id="RoundTypeId"
+              onChange={this.onChangeRound}
+              value={round.RoundTypeId}
+            >
+              {roundTypes &&
+                roundTypes.map(type => {
+                  return (
+                    <option key={type.Id} value={type.Id}>
+                      {type.Name}
+                    </option>
+                  );
+                })}
+            </Form.Control>
+          </div>
+          <div className="modalDiv">
+            <p>Pre-money</p>
+            <input
+              className={"input50"}
+              name={"PreMoney"}
+              onChange={this.onChangeRound}
+              value={round.PreMoney}
+            />
+          </div>
+          <div className="modalDiv">
+            <p>Option Pool</p>
+            <input
+              className={"input50"}
+              name={"OptionPool"}
+              onChange={this.onChangeRound}
+              value={round.OptionPool}
+            />
+          </div>
+          <div className="modalDiv">
+            <p>Price per Share</p>
+            <input
+              className={"input50"}
+              name={"PricePerShare"}
+              onChange={this.onChangeRound}
+              value={round.PricePerShare}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.onEditToggle}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={this.onSave}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  render() {
+    const { filterRounds } = this.state;
     if (filterRounds.length <= 0) {
       this.filterRounds();
     }
@@ -235,128 +350,7 @@ class RoundView extends React.Component {
                           </tr>
                         );
                       })}
-                    {/* <Modal show={this.state.isEdit}>
-                      <Modal.Header>
-                        <Modal.Title>Id: {round.Id}</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        <div className="modalDiv">
-                          <p>Round Type</p>
-                          <Form.Control
-                            className={"input50"}
-                            as="select"
-                            id="RoundTypeId"
-                            onChange={this.onChangeRound}
-                            value={round.RoundTypeId}
-                          >
-                            {roundTypes &&
-                              roundTypes.map(type => {
-                                return (
-                                  <option key={type.Id} value={type.Id}>
-                                    {type.Name}
-                                  </option>
-                                );
-                              })}
-                          </Form.Control>
-                        </div>
-                        <div className="modalDiv">
-                          <p>Pre-money</p>
-                          <input
-                            className={"input50"}
-                            name={"PreMoney"}
-                            onChange={this.onChangeRound}
-                            value={round.PreMoney}
-                          />
-                        </div>
-                        <div className="modalDiv">
-                          <p>Option Pool</p>
-                          <input
-                            className={"input50"}
-                            name={"OptionPool"}
-                            onChange={this.onChangeRound}
-                            value={round.OptionPool}
-                          />
-                        </div>
-                        <div className="modalDiv">
-                          <p>Price per Share</p>
-                          <input
-                            className={"input50"}
-                            name={"PricePerShare"}
-                            onChange={this.onChangeRound}
-                            value={round.PricePerShare}
-                          />
-                        </div>
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={this.onEditToggle}>
-                          Close
-                        </Button>
-                        <Button variant="primary" onClick={this.onSave}>
-                          Save Changes
-                        </Button>
-                      </Modal.Footer>
-                    </Modal> */}
-                    <Modal show={this.state.isAdd}>
-                      <Modal.Header>
-                        <Modal.Title>Add Round</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        {/* <div className="modalDiv">
-                          <p>Round Type</p>
-                          <Form.Control
-                            className={"input50"}
-                            as="select"
-                            id="RoundTypeId"
-                            onChange={this.onChangeNewRound}
-                            value={newRound.RoundTypeId}
-                          >
-                            {roundTypes &&
-                              roundTypes.map(type => {
-                                return (
-                                  <option key={type.Id} value={type.Id}>
-                                    {type.Name}
-                                  </option>
-                                );
-                              })}
-                          </Form.Control>
-                        </div> */}
-                        <div className="modalDiv">
-                          <p>Pre-money</p>
-                          <input
-                            className={"input50"}
-                            name={"PreMoney"}
-                            onChange={this.onChangeNewRound}
-                            value={newRound.PreMoney}
-                          />
-                        </div>
-                        <div className="modalDiv">
-                          <p>Option Pool</p>
-                          <input
-                            className={"input50"}
-                            name={"OptionPool"}
-                            onChange={this.onChangeNewRound}
-                            value={newRound.OptionPool}
-                          />
-                        </div>
-                        {/* <div className="modalDiv">
-                          <p>Price per Share</p>
-                          <input
-                            className={"input50"}
-                            name={"PricePerShare"}
-                            onChange={this.onChangeNewRound}
-                            value={newRound.PricePerShare}
-                          />
-                        </div> */}
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={this.onAddToggle}>
-                          Close
-                        </Button>
-                        <Button variant="primary" onClick={this.onAdd}>
-                          Add
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
+                    {this.renderAddModal()}
                   </tbody>
                 </table>
               </CardBody>
