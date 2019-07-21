@@ -105,6 +105,16 @@ class CompanyView extends React.Component {
     });
   };
 
+  onPublicToggle = () => {
+    const { company } = this.state;
+    this.setState({
+      company: {
+        ...company,
+        IsPublic: !company.IsPublic
+      }
+    });
+  };
+
   onEditToggle = company => {
     this.setState(prevState => ({ isEdit: !prevState.isEdit }));
     if (company) {
@@ -534,6 +544,14 @@ class CompanyView extends React.Component {
               onStateChanged={this.onActiveToggle}
             />
           </div>
+          <div className="modalDiv">
+            <p>Public</p>
+            <Switch
+              className="d-flex"
+              enabled={company.IsPublic}
+              onStateChanged={this.onPublicToggle}
+            />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.onEditToggle}>
@@ -572,6 +590,13 @@ class CompanyView extends React.Component {
             <span style={{ color: "#17c671" }}>Available</span>
           ) : (
             <span style={{ color: "#c4183c" }}>Unavailable</span>
+          )}
+        </td>
+        <td>
+          {entry.IsPublic ? (
+            <span style={{ color: "#17c671" }}>Public</span>
+          ) : (
+            <span style={{ color: "#c4183c" }}>Private</span>
           )}
         </td>
         <td>
@@ -642,6 +667,9 @@ class CompanyView extends React.Component {
                       </th>
                       <th scope="col" className="border-0">
                         Active
+                      </th>
+                      <th scope="col" className="border-0">
+                        Public
                       </th>
                       <th scope="col" className="border-0" />
                     </tr>

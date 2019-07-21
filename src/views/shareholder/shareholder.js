@@ -205,14 +205,14 @@ class ShareholdersView extends React.Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="modalDiv">
+          {/* <div className="modalDiv">
             <p>Active</p>
             <Switch
               className="d-flex"
               enabled={shareholder.IsActive}
               onStateChanged={() => this.onActiveToggle("update")}
             />
-          </div>
+          </div> */}
           <div className="modalDiv">
             <p>Public</p>
             <Switch
@@ -263,7 +263,7 @@ class ShareholdersView extends React.Component {
                 shareholderTypes.map(type => {
                   return (
                     <option key={type.Id} value={type.Id}>
-                      {type.Name}
+                      {type.Name === "Funder" ? "Founder" : type.Name}
                     </option>
                   );
                 })}
@@ -342,9 +342,9 @@ class ShareholdersView extends React.Component {
                       <th scope="col" className="border-0">
                         Public
                       </th>
-                      <th scope="col" className="border-0">
+                      {/* <th scope="col" className="border-0">
                         Active
-                      </th>
+                      </th> */}
                       <th scope="col" className="border-0" />
                     </tr>
                   </thead>
@@ -371,21 +371,27 @@ class ShareholdersView extends React.Component {
                             <td>{fullname}</td>
                             <td>{UserAccount.Email}</td>
                             <td>{UserAccount.Phone}</td>
-                            <td>{ShareholderType.Name}</td>
                             <td>
-                              {entry.IsPublic ? (
-                                <span style={{ color: "#17c671" }}>True</span>
-                              ) : (
-                                <span style={{ color: "#c4183c" }}>False</span>
-                              )}
+                              {ShareholderType.Name === "Funder"
+                                ? "Founder"
+                                : ShareholderType.Name}
                             </td>
                             <td>
+                              {entry.IsPublic ? (
+                                <span style={{ color: "#17c671" }}>Public</span>
+                              ) : (
+                                <span style={{ color: "#c4183c" }}>
+                                  Private
+                                </span>
+                              )}
+                            </td>
+                            {/* <td>
                               {entry.IsActive ? (
                                 <span style={{ color: "#17c671" }}>True</span>
                               ) : (
                                 <span style={{ color: "#c4183c" }}>False</span>
                               )}
-                            </td>
+                            </td> */}
                             <td>
                               {fullname !== "Option Pool" && (
                                 <React.Fragment>
