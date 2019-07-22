@@ -18,7 +18,7 @@ class StatisticView extends React.Component {
 
   render() {
     const iframe =
-      '<iframe width="1000" height="800" src="https://datastudio.google.com/embed/reporting/10vLoX-FHZX-0bAcJJ3ugGblVh8HDz6BM/page/wgMu" frameborder="0" style="border:0" allowfullscreen></iframe>';
+      '<iframe width="1000" height="800" src="https://datastudio.google.com/embed/reporting/10vLoX-FHZX-0bAcJJ3ugGblVh8HDz6BM/page/YfRu" frameborder="0" style="border:0" allowfullscreen></iframe>';
 
     return (
       <Container fluid className={`main-content-container px-4 wrapper`}>
